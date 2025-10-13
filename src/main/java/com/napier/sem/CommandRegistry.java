@@ -3,6 +3,8 @@ package com.napier.sem;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.napier.sem.commands.TopCountriesCommand;
+
 /**
  * Registry for managing commands
  */
@@ -10,6 +12,14 @@ public class CommandRegistry {
     
     private static final Map<String, ICommand> commands = new HashMap<>();
     
+    /**
+     * Initialize and register all available commands
+     */
+    public static void initializeCommands() {
+        // Register commands here!!
+        registerCommand("topcountries", new TopCountriesCommand());
+    }
+
     /**
      * Register a command with a name
      * @param name Command name
@@ -45,11 +55,5 @@ public class CommandRegistry {
         return new HashMap<>(commands);
     }
     
-    /**
-     * Initialize and register all available commands
-     */
-    public static void initializeCommands() {
-        registerCommand("topcountries", new TopCountriesCommand());
-        // Add more commands here as they are created
-    }
+
 }
