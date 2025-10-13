@@ -3,7 +3,7 @@ package com.napier.sem;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.napier.sem.commands.TopCountriesCommand;
+import com.napier.sem.commands.*;
 
 /**
  * Registry for managing commands
@@ -18,6 +18,8 @@ public class CommandRegistry {
     public static void initializeCommands() {
         // Register commands here!!
         registerCommand("topcountries", new TopCountriesCommand());
+
+        registerCommand("topcities", new TopCitiesCommand());
     }
 
     /**
