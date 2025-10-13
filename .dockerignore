@@ -1,0 +1,17 @@
+# Ignore version control and IDE files
+.git/
+.idea/
+*.iml
+
+# Ignore test classes and docs
+/target/test-classes/
+docs/
+*.md
+
+# Ignore temp/log files
+*.tmp
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
