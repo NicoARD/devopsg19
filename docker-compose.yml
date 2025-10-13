@@ -26,7 +26,7 @@ services:
       MYSQL_USER: devuser
       MYSQL_PASSWORD: devpass
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
@@ -38,7 +38,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: mongoadmin
       MONGO_INITDB_ROOT_PASSWORD: mongopass
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongo-data:/data/db
     networks:
@@ -47,7 +47,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - "8081:8080"
+      - "8082:8080"
     depends_on:
       - db
     networks:
