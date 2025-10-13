@@ -13,16 +13,16 @@ public class DatabaseTest {
      */
     public static boolean testDatabaseConnection() {
         try (Connection connection = DatabaseConfig.getConnection()) {
-            System.out.println("✅ Database connection established successfully!");
+            System.out.println("Database connection established successfully!");
             
             // Test basic query execution
             return performPingTest(connection);
             
         } catch (SQLException e) {
-            System.err.println("❌ Database connection failed!");
-            System.err.println("💥 Error: " + e.getMessage());
-            System.err.println("🔍 SQL State: " + e.getSQLState());
-            System.err.println("🔢 Error Code: " + e.getErrorCode());
+            System.err.println("Database connection failed!");
+            System.err.println("Error: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             return false;
         }
     }
@@ -34,7 +34,7 @@ public class DatabaseTest {
      */
     private static boolean performPingTest(Connection connection) {
         try {
-            System.out.println("\n📊 Database Information:");
+            System.out.println("Database Information:");
             
             // Get database metadata
             DatabaseMetaData metaData = connection.getMetaData();
@@ -63,10 +63,10 @@ public class DatabaseTest {
                         // Test sample data query
                         testSampleDataQuery(connection);
                         
-                        System.out.println("✅ Database ping test completed successfully!");
+                        System.out.println("Database ping test completed successfully!");
                         return true;
                     } else {
-                        System.out.println("⚠️  Warning: No tables found in 'world' database");
+                        System.out.println("Warning: No tables found in 'world' database");
                         return false;
                     }
                 }
@@ -92,7 +92,7 @@ public class DatabaseTest {
         try (PreparedStatement stmt = connection.prepareStatement(tableQuery);
              ResultSet rs = stmt.executeQuery()) {
             
-            System.out.println("\n📋 World Database Tables:");
+            System.out.println("World Database Tables:");
             while (rs.next()) {
                 String tableName = rs.getString("table_name");
                 long tableRows = rs.getLong("table_rows");
@@ -111,7 +111,7 @@ public class DatabaseTest {
         try (PreparedStatement stmt = connection.prepareStatement(sampleQuery);
              ResultSet rs = stmt.executeQuery()) {
             
-            System.out.println("\n🏆 Top 5 Countries by Population:");
+            System.out.println("Top 5 Countries by Population:");
             while (rs.next()) {
                 String name = rs.getString("Name");
                 long population = rs.getLong("Population");
