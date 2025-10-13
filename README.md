@@ -1,5 +1,4 @@
-**Project Documentation**
-**__adding build badges__**
+**__Project Build Badges__**
 
 ![workflow](https://github.com/Obioma-Nwabuisi/devopsg19/actions/workflows/main.yml/badge.svg)
 
