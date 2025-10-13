@@ -1,4 +1,4 @@
-**__Project Build Badges__**
+**__Group 19 Devops Project__**
 
 ![workflow](https://github.com/Obioma-Nwabuisi/devopsg19/actions/workflows/main.yml/badge.svg)
 
