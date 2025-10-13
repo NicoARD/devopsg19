@@ -1,0 +1,26 @@
+# Ignore version control and IDE files
+.git/
+.gitignore
+.idea/
+.vscode/
+*.iml
+
+# Ignore Maven target directory (will be rebuilt in container)
+target/
+
+# Ignore test classes and docs
+docs/
+README.md
+
+# Ignore temp/log files
+*.tmp
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Docker files (not needed in build context)
+Dockerfile
+docker-compose.yml
+.dockerignore
