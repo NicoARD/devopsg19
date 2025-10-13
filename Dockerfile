@@ -41,5 +41,5 @@ USER appuser
 # Expose port (if needed for future web features)
 EXPOSE 8080
 
-# Set entrypoint to run the JAR
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Set entrypoint to run the JAR with database testing by default
+ENTRYPOINT ["java", "-jar", "app.jar", "--test-db"]
