@@ -1,7 +1,9 @@
 **__Group 19 Devops Project__**
 
-![workflow](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml/badge.svg)
+# devopsg19
 
-[![LICENSE](https://img.shields.io/github/license/Obioma-Nwabuisi/devopsg.svg?style=flat-square)](https://github.com/Obioma-Nwabuisi/devopsg19/blob/master/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/Obioma-Nwabuisi/devopsg.svg?style=social)](https://github.com/Obioma-Nwabuisi/devopsg19/stargazers)
-[![Releases](https://img.shields.io/github/release/Obioma-Nwabuisi/devopsg/all.svg?style=flat-square)](https://github.com/Obioma-Nwabuisi/devopsg19/releases)
+[![Build Status - master](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml)
+[![Build Status - develop](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml/badge.svg?branch=develop)](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml)
+[![Coverage Status](https://codecov.io/gh/NicoARD/devopsg19/branch/master/graph/badge.svg)](https://codecov.io/gh/NicoARD/devopsg19)
+[![GitHub release (latest by name)](https://img.shields.io/github/v/release/NicoARD/devopsg19?display_name=release)](https://github.com/NicoARD/devopsg19/releases)
+[![License](https://img.shields.io/github/license/NicoARD/devopsg19)](https://github.com/NicoARD/devopsg19/blob/master/LICENSE)
