@@ -1,6 +1,4 @@
-**__Group 19 Devops Project__**
-
-# devopsg19
+# **__Group 19 Devops Project__**
 
 [![Build Status - master](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml)
 [![Build Status - develop](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml/badge.svg?branch=develop)](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml)
