@@ -128,13 +128,7 @@ jobs:
           **Status:** ${buildStatus}
           **Commit:** ${{ github.sha }}
           **Build ID:** ${{ github.run_id }}
-          
-          ### Results:
-          - ✅ Code compilation
-          - ✅ Unit tests
-          - ✅ JAR packaging
-          - ✅ Docker build
-          
+
           > This comment is automatically updated for each commit.`;
           
           if (botComment) {
