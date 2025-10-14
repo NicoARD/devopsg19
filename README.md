@@ -1,8 +1,7 @@
-**Project Documentation**
-**__adding build badges__**
+**__Group 19 Devops Project__**
 
-![workflow](https://github.com/Obioma-Nwabuisi/devopsg19/actions/workflows/main.yml/badge.svg)
+![workflow](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml/badge.svg)
 
-[![LICENSE](https://img.shields.io/github/license/Obioma-Nwabuisi/devops.svg?style=flat-square)](https://github.com/Obioma-Nwabuisi/devops/blob/master/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/Obioma-Nwabuisi/devops.svg?style=social)](https://github.com/Obioma-Nwabuisi/devops/stargazers)
-[![Releases](https://img.shields.io/github/release/Obioma-Nwabuisi/devops/all.svg?style=flat-square)](https://github.com/Obioma-Nwabuisi/devops/releases)
+[![LICENSE](https://img.shields.io/github/license/Obioma-Nwabuisi/devopsg.svg?style=flat-square)](https://github.com/Obioma-Nwabuisi/devopsg19/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/Obioma-Nwabuisi/devopsg.svg?style=social)](https://github.com/Obioma-Nwabuisi/devopsg19/stargazers)
+[![Releases](https://img.shields.io/github/release/Obioma-Nwabuisi/devopsg/all.svg?style=flat-square)](https://github.com/Obioma-Nwabuisi/devopsg19/releases)
