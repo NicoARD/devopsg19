@@ -89,8 +89,15 @@ jobs:
     - name: Compile project
       run: mvn clean compile
     
-    - name: Run tests
-      run: mvn test -Dmaven.test.failure.ignore=false
+    - name: Run unit tests
+      run: |
+        # Run unit tests first (excluding integration tests)
+        mvn test -Dtest="!DatabaseIntegrationTest" -Dmaven.test.failure.ignore=false
+    
+    - name: Run integration tests
+      run: |
+        # Run integration tests with database available
+        mvn test -Dtest="DatabaseIntegrationTest" -Dmaven.test.failure.ignore=false
     
     - name: Build JAR
       run: mvn clean package -DskipTests
