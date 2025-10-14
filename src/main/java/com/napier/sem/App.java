@@ -18,54 +18,9 @@ public class App {
         // Initialize command registry
         CommandRegistry.initializeCommands();
         
-        // Parse command line arguments
-        boolean runDbTests = false;
-        boolean runCommandInterface = false;
+        System.out.println("Starting command interface...");
+        runCommandInterface();
 
-        for (String arg : args) {
-            switch (arg.toLowerCase()) {
-                case "--test-db":
-                case "-t":
-                    runDbTests = true;
-                    break;
-                case "--command":
-                case "-c":
-                    runCommandInterface = true;
-                    break;
-                default:
-                    System.out.println("WARNING: Unknown argument: " + arg);
-                    break;
-            }
-        }
-
-        
-        if (runDbTests) {
-            System.out.println("Testing database connectivity...");
-            
-            // Test database connectivity
-            boolean dbConnected = DatabaseTest.testDatabaseConnection();
-            
-            if (dbConnected) {
-                System.out.println("All systems operational!");
-                System.out.println("Application ready for development");
-            } else {
-                System.out.println("Database connectivity issues occurred");
-                System.exit(1);
-            }
-        }
-        
-        if (runCommandInterface) {
-            System.out.println("Starting command interface...");
-            runCommandInterface();
-        }
-        
-        if (!runDbTests && !runCommandInterface) {
-            System.out.println("Application started without database testing or command interface");
-            System.out.println("TIP: Use --test-db or -t to run database connectivity tests");
-            System.out.println("TIP: Use --command or -c to run command interface");
-            System.out.println("TIP: Use --help or -h for usage information");
-        }
-        
         // Gracefully close database connections
         DatabaseConfig.closeDataSource();
         System.out.println("Application completed successfully!");
