@@ -20,10 +20,10 @@ public interface ICommand {
     String getDescription();
     
     /**
-     * Execute the command with given arguments
-     * @param connection Database connection
-     * @param args Command arguments
-     * @throws SQLException if database operation fails
+     * Execute the command with given arguments.
+     * @param connection Database connection.
+     * @param args Command arguments.
+     * @throws SQLException if database operation fails.
      */
     void execute(Connection connection, String[] args) throws SQLException;
 }

@@ -56,6 +56,5 @@ public class CommandRegistry {
     public static Map<String, ICommand> getAllCommands() {
         return new HashMap<>(commands);
     }
-    
 
 }
