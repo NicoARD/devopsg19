@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Command to display top N countries by population
+ * Command to display top N countries by population.
  */
 public class TopCountriesCommand implements ICommand {
     
