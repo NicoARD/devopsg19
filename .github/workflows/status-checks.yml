@@ -1,0 +1,53 @@
+name: Status Checks
+
+on:
+  push:
+    branches: [ develop, master, main ]
+  pull_request:
+    branches: [ develop, master, main ]
+
+jobs:
+  status-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Validate project structure
+      run: |
+        echo "Validating project structure..."
+        test -f pom.xml || { echo "pom.xml not found"; exit 1; }
+        test -f Dockerfile || { echo "Dockerfile not found"; exit 1; }
+        test -d src/main/java || { echo "src/main/java directory not found"; exit 1; }
+        test -f databases/world.sql || { echo "databases/world.sql not found"; exit 1; }
+        test -f databases/init-permissions.sql || { echo "databases/init-permissions.sql not found"; exit 1; }
+        echo "================================================================="
+        echo "Project structure validation passed"
+        echo "================================================================="
+    
+    - name: Check Java version compatibility
+      run: |
+        echo "Checking Java version in pom.xml..."
+        grep -q "maven.compiler.source>17" pom.xml || { echo "Java 17 not configured"; exit 1; }
+        grep -q "maven.compiler.target>17" pom.xml || { echo "Java 17 target not configured"; exit 1; }
+        echo "================================================================="
+        echo "Java 17 configuration found"
+        echo "================================================================="
+    
+    - name: Validate Docker configuration
+      run: |
+        echo "Validating Dockerfile..."
+        grep -q "FROM eclipse-temurin:17" Dockerfile || { echo "Java 17 base image not found"; exit 1; }
+        grep -q "COPY.*pom.xml" Dockerfile || { echo "pom.xml copy instruction not found"; exit 1; }
+        echo "================================================================="
+        echo "Dockerfile validation passed"
+        echo "================================================================="
+    
+    - name: Check workflow files
+      run: |
+        echo "Checking workflow files..."
+        test -f .github/workflows/main.yml || { echo "main.yml workflow not found"; exit 1; }
+        test -f .github/workflows/pr-validation.yml || { echo "pr-validation.yml workflow not found"; exit 1; }
+        echo "================================================================="
+        echo "Workflow files validated"
+        echo "================================================================="
