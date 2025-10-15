@@ -20,6 +20,10 @@ public class CommandRegistry {
         registerCommand("topcountries", new TopCountriesCommand());
 
         registerCommand("topcities", new TopCitiesCommand());
+
+        commands.put("districtpop", new ViewPopulationByDistrictCommand());
+
+
     }
 
     /**
