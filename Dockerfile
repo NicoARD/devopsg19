@@ -42,4 +42,4 @@ USER appuser
 EXPOSE 8080
 
 # Set entrypoint to run the JAR with database testing by default
-ENTRYPOINT ["java", "-jar", "app.jar", "--test-db"]
+ENTRYPOINT ["java", "-jar", "app.jar", ""]

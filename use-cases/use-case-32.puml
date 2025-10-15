@@ -1,0 +1,27 @@
+@startuml
+skinparam actor {
+  BorderColor DarkBlue
+  BackgroundColor LightBlue
+  FontSize 14
+}
+skinparam usecase {
+  BorderColor Green
+  BackgroundColor LightGreen
+  FontSize 14
+}
+skinparam titleFontSize 24
+skinparam noteBackgroundColor Yellow
+skinparam noteBorderColor DarkRed
+
+title US32: View Top Language Speakers by Population with World Percentage
+
+actor "Data Analyst" as DA
+rectangle "Population Reporting System" as SystemBoundary {
+  usecase "View Top Language Speakers by Population with World Percentage" as UCR
+}
+
+DA --> UCR : Requests report
+
+note left of UCR: Key Extensions:\n- Database query failure: Notify user\n- No language data available: Inform and end\n- Incomplete data for languages: Return available data
+
+@enduml

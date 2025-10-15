@@ -1,0 +1,27 @@
+@startuml
+skinparam actor {
+  BorderColor DarkBlue
+  BackgroundColor LightBlue
+  FontSize 14
+}
+skinparam usecase {
+  BorderColor Green
+  BackgroundColor LightGreen
+  FontSize 14
+}
+skinparam titleFontSize 24
+skinparam noteBackgroundColor Yellow
+skinparam noteBorderColor DarkRed
+
+title US9: View All Cities in a Specific Region by Population Ranking
+
+actor "Data Analyst" as DA
+rectangle "Population Reporting System" as SystemBoundary {
+  usecase "View All Cities in a Specific Region by Population Ranking" as UCR
+}
+
+DA --> UCR : Requests report
+
+note left of UCR: Key Extensions:\n- Invalid region name: Handle error and retry\n- Database query failure: Notify user\n- No city data available: Inform and end
+
+@enduml
