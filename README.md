@@ -1,9 +1,14 @@
-**__Group 19 Devops Project__**
+# DevOps Group 19 Project
+## Software Engineering Methods Project
 
-# devopsg19
+A Java application for database operations with comprehensive CI/CD pipeline automation using GitHub Actions.
 
-[![Build Status - master](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml)
-[![Build Status - develop](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml/badge.svg?branch=develop)](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml)
-[![Coverage Status](https://codecov.io/gh/NicoARD/devopsg19/branch/master/graph/badge.svg)](https://codecov.io/gh/NicoARD/devopsg19)
-[![GitHub release (latest by name)](https://img.shields.io/github/v/release/NicoARD/devopsg19?display_name=release)](https://github.com/NicoARD/devopsg19/releases)
+[![Build](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml)
+[![PR Validation](https://github.com/NicoARD/devopsg19/actions/workflows/pr-validation.yml/badge.svg?branch=master)](https://github.com/NicoARD/devopsg19/actions/workflows/pr-validation.yml)
+[![Docker Publish](https://github.com/NicoARD/devopsg19/actions/workflows/docker-publish.yml/badge.svg?branch=master)](https://github.com/NicoARD/devopsg19/actions/workflows/docker-publish.yml)
+[![Release](https://img.shields.io/github/v/release/NicoARD/devopsg19)](https://github.com/NicoARD/devopsg19/releases)
 [![License](https://img.shields.io/github/license/NicoARD/devopsg19)](https://github.com/NicoARD/devopsg19/blob/master/LICENSE)
+[![Issues](https://img.shields.io/github/issues/NicoARD/devopsg19)](https://github.com/NicoARD/devopsg19/issues)
+[![PRs](https://img.shields.io/github/issues-pr/NicoARD/devopsg19)](https://github.com/NicoARD/devopsg19/pulls)
+
+
