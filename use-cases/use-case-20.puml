@@ -1,0 +1,27 @@
+@startuml
+skinparam actor {
+  BorderColor DarkBlue
+  BackgroundColor LightBlue
+  FontSize 14
+}
+skinparam usecase {
+  BorderColor Green
+  BackgroundColor LightGreen
+  FontSize 14
+}
+skinparam titleFontSize 24
+skinparam noteBackgroundColor Yellow
+skinparam noteBorderColor DarkRed
+
+title US20: View Top N Populated Capital Cities in the World
+
+actor "Data Analyst" as DA
+rectangle "Population Reporting System" as SystemBoundary {
+  usecase "View Top N Populated Capital Cities in the World" as UCR
+}
+
+DA --> UCR : Requests report
+
+note left of UCR: Key Extensions:\n- Invalid N value: Handle error and retry\n- Database query failure: Notify user\n- Fewer capital cities than N: Return available data
+
+@enduml
