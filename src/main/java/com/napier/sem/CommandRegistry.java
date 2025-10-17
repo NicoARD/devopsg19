@@ -20,6 +20,9 @@ public class CommandRegistry {
         registerCommand("topcountries", new TopCountriesCommand());
 
         registerCommand("topcities", new TopCitiesCommand());
+
+        registerCommand("cities-country", new AllCitiesCountryCommand());
+
     }
 
     /**
