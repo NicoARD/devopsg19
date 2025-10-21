@@ -13,12 +13,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      mongo:
-        condition: service_started
     networks:
       - sem-net
-    depends_on:
-      - db
+
   
   db:
     image: mysql:8.0
