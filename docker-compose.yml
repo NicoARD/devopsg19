@@ -1,6 +1,20 @@
 services:
   app:
     build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=world
+      - MYSQL_USER=devuser
+      - MYSQL_PASSWORD=devpass
+      - JAVA_OPTS=-Xmx512m
+    depends_on:
+      db:
+        condition: service_healthy
+      mongo:
+        condition: service_started
     networks:
       - sem-net
     depends_on:
@@ -8,16 +22,23 @@ services:
   
   db:
     image: mysql:8.0
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: world  
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: devpass
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
-      - ./databases/world.sql:/docker-entrypoint-initdb.d/world.sql:ro
+      - mysql-data:/var/lib/mysql
+      - ./databases/world.sql:/docker-entrypoint-initdb.d/01-world.sql:ro
+      - ./databases/init-permissions.sql:/docker-entrypoint-initdb.d/02-init-permissions.sql:ro
     networks:
       - sem-net
     
 networks:
   sem-net:
     driver: bridge
+volumes:
+  mysql-data:
+  mongo-data:
