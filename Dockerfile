@@ -26,7 +26,7 @@ FROM eclipse-temurin:17-jre
 WORKDIR /app
 
 # Copy the built JAR from build stage
-COPY --from=build /app/target/seMethods-1.0-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/seMethods-1.0-SNAPSHOT-jar-with-dependencies.jar app.jar
 
 # Create non-root user for security
 RUN addgroup --system --gid 1001 appgroup && \
