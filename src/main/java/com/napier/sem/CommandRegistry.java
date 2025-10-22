@@ -21,7 +21,9 @@ public class CommandRegistry {
 
         registerCommand("topcities", new TopCitiesCommand());
 
-        registerCommand("topcities-district", new TopCitiesByDistrictCommand());
+        commands.put("districtpop", new ViewPopulationByDistrictCommand());
+
+
     }
 
     /**
