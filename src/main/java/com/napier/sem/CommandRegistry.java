@@ -23,6 +23,8 @@ public class CommandRegistry {
 
         registerCommand("regionpop", new ViewPopulationByRegionCommand());
 
+        registerCommand("languagedist", new ViewGlobalLanguageDistributionCommand());
+
         commands.put("districtpop", new ViewPopulationByDistrictCommand());
 
 
