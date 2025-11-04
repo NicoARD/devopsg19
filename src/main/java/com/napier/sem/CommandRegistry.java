@@ -25,7 +25,10 @@ public class CommandRegistry {
 
         registerCommand("languagedist", new ViewGlobalLanguageDistributionCommand());
 
-        commands.put("districtpop", new ViewPopulationByDistrictCommand());
+        registerCommand("districtpop", new ViewPopulationByDistrictCommand());
+
+        registerCommand("topcapitals", new TopCapitalCitiesCommand());
+
 
 
     }
