@@ -29,6 +29,8 @@ public class CommandRegistry {
 
         registerCommand("topcapitals", new TopCapitalCitiesCommand());
 
+        registerCommand("countrypop", new CountryPopulationCommand());
+
 
 
     }
