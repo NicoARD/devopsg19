@@ -16,6 +16,7 @@ services:
     networks:
       - sem-net
 
+
   db:
     image: mysql:8.0
     restart: always
