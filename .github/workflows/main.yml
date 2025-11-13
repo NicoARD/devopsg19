@@ -15,13 +15,13 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mysqladmin ping -pexample"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=3
+          --health-retries=5
     
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         
       - name: Set up JDK 17
@@ -29,30 +29,51 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-          
+
+      # 🔧 WAIT for MySQL to be fully ready (important fix)
+      - name: Wait for MySQL
+        run: |
+          echo "Waiting for MySQL to become ready..."
+          for i in {1..15}; do
+            if mysqladmin ping -h 127.0.0.1 -pexample --silent; then
+              echo "MySQL is ready!"
+              break
+            fi
+            echo "Still waiting..."
+            sleep 4
+          done
+
+      # 🗄 Initialize DB (import world.sql + create user permissions with valid MySQL 8 syntax)
       - name: Initialize database
         run: |
           if [ -f "databases/world.sql" ]; then
+            echo "Importing world.sql..."
             mysql -h 127.0.0.1 -P 3306 -u root -pexample world < databases/world.sql
           fi
-          if [ -f "databases/init-permissions.sql" ]; then
-            mysql -h 127.0.0.1 -P 3306 -u root -pexample world < databases/init-permissions.sql
-          fi
-          
-      - name: Compile with Maven
+
+          echo "Applying database permissions..."
+
+          mysql -h 127.0.0.1 -P 3306 -u root -pexample <<EOF
+          DROP USER IF EXISTS 'worlduser'@'%';
+          CREATE USER 'worlduser'@'%' IDENTIFIED BY 'world123';
+          GRANT ALL PRIVILEGES ON world.* TO 'worlduser'@'%';
+          FLUSH PRIVILEGES;
+          EOF
+
+      - name: Compile project
         run: mvn compile
         
-      - name: Run tests
+      - name: Run unit tests
         run: mvn test
         
-      - name: Package JAR
+      - name: Package executable JAR
         run: mvn package
         
-      - name: Build Docker Image
+      - name: Build Docker image
         run: docker build -t sem-methods .
         
-      - name: Run image
+      - name: Run Docker container
         run: docker run --name sem-methods-container -d sem-methods
         
-      - name: View logs
+      - name: View container logs
         run: docker logs sem-methods-container
