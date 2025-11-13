@@ -31,6 +31,9 @@ public class CommandRegistry {
 
         registerCommand("countrypop", new CountryPopulationCommand());
 
+        registerCommand("citypop", new CityPopulationCommand());
+
+
 
 
     }
