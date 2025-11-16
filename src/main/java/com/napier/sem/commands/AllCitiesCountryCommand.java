@@ -1,18 +1,15 @@
 package com.napier.sem.commands;
 
-import com.napier.sem.ICommand;
+import com.napier.sem.CommandBase;
 import java.sql.*;
 
 /**
  * Command to display all cities in a specific country ordered by population (largest to smallest).
  */
-public class AllCitiesCountryCommand implements ICommand {
+public class AllCitiesCountryCommand extends CommandBase {
 
-    private final String description = "Display all cities in a country ordered by population (usage: cities-country <country_name>)";
-
-    @Override
-    public String getDescription() {
-        return description;
+    public AllCitiesCountryCommand() {
+        super("cities-country", "Display all cities in a country ordered by population (usage: cities-country <country_name>)");
     }
 
     @Override

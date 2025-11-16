@@ -1,6 +1,6 @@
 package com.napier.sem.commands;
 
-import com.napier.sem.ICommand;
+import com.napier.sem.CommandBase;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,14 +15,10 @@ import java.sql.SQLException;
  *
  * Usage: topcapitals <number>
  */
-public class TopCapitalCitiesCommand implements ICommand {
+public class TopCapitalCitiesCommand extends CommandBase {
 
-    private final String description =
-            "Display the top N populated capital cities in the world (usage: topcapitals <number>)";
-
-    @Override
-    public String getDescription() {
-        return description;
+    public TopCapitalCitiesCommand() {
+        super("topcapitals", "Display the top N populated capital cities in the world (usage: topcapitals <number>)");
     }
 
     @Override

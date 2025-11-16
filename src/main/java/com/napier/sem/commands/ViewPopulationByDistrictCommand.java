@@ -1,6 +1,6 @@
 package com.napier.sem.commands;
 
-import com.napier.sem.ICommand;
+import com.napier.sem.CommandBase;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,13 +10,10 @@ import java.sql.SQLException;
 /**
  * Command to display total population of a specific district
  */
-public class ViewPopulationByDistrictCommand implements ICommand {
+public class ViewPopulationByDistrictCommand extends CommandBase {
 
-    public final String description = "View population of a specific district (usage: districtpop <district_name>)";
-
-    @Override
-    public String getDescription() {
-        return description;
+    public ViewPopulationByDistrictCommand() {
+        super("districtpop", "View population of a specific district (usage: districtpop <district_name>)");
     }
 
     @Override

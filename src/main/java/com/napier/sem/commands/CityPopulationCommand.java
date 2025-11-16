@@ -1,6 +1,6 @@
 package com.napier.sem.commands;
 
-import com.napier.sem.ICommand;
+import com.napier.sem.CommandBase;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,14 +17,10 @@ import java.sql.SQLException;
  *
  * Usage: citypop <city_name>
  */
-public class CityPopulationCommand implements ICommand {
+public class CityPopulationCommand extends CommandBase {
 
-    private final String description =
-            "Display the population of a specific city (usage: citypop <city_name>)";
-
-    @Override
-    public String getDescription() {
-        return description;
+    public CityPopulationCommand() {
+        super("citypop", "Display the population of a specific city (usage: citypop <city_name>)");
     }
 
     @Override

@@ -16,33 +16,34 @@ public class CommandRegistry {
      * Initialize and register all available commands
      */
     public static void initializeCommands() {
-        // Register commands here!!
-        registerCommand("topcountries", new TopCountriesCommand());
-
-        registerCommand("topcities", new TopCitiesCommand());
-
-        registerCommand("regionpop", new ViewPopulationByRegionCommand());
-
-        registerCommand("languagedist", new ViewGlobalLanguageDistributionCommand());
-
-        registerCommand("districtpop", new ViewPopulationByDistrictCommand());
-
-        registerCommand("topcapitals", new TopCapitalCitiesCommand());
-
-        registerCommand("countrypop", new CountryPopulationCommand());
-
-        registerCommand("citypop", new CityPopulationCommand());
-
-
-
-
+        // Register commands here - using their execution command from the object
+        registerCommand(new TopCountriesCommand());
+        registerCommand(new TopCitiesCommand());
+        registerCommand(new ViewPopulationByRegionCommand());
+        registerCommand(new ViewGlobalLanguageDistributionCommand());
+        registerCommand(new ViewPopulationByDistrictCommand());
+        registerCommand(new TopCapitalCitiesCommand());
+        registerCommand(new CountryPopulationCommand());
+        registerCommand(new CityPopulationCommand());
+        registerCommand(new AllCitiesCountryCommand());
+        registerCommand(new TopCitiesByDistrictCommand());
     }
 
     /**
-     * Register a command with a name
-     * @param name Command name
+     * Register a command using its execution command
      * @param command Command implementation
      */
+    public static void registerCommand(ICommand command) {
+        commands.put(command.getExcecutionCommand().toLowerCase(), command);
+    }
+    
+    /**
+     * Register a command with a specific name (for backwards compatibility or aliasing)
+     * @param name Command name
+     * @param command Command implementation
+     * @deprecated Use {@link #registerCommand(ICommand)} instead to use the command's execution command
+     */
+    @Deprecated
     public static void registerCommand(String name, ICommand command) {
         commands.put(name.toLowerCase(), command);
     }

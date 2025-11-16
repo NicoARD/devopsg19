@@ -1,6 +1,6 @@
 package com.napier.sem.commands;
 
-import com.napier.sem.ICommand;
+import com.napier.sem.CommandBase;
 
 import java.sql.Connection;
 
@@ -28,18 +28,10 @@ import java.sql.SQLException;
 
  */
 
-public class CountryPopulationCommand implements ICommand {
+public class CountryPopulationCommand extends CommandBase {
 
-    private final String description =
-
-            "Display the population of a specific country (usage: countrypop <country_name>)";
-
-    @Override
-
-    public String getDescription() {
-
-        return description;
-
+    public CountryPopulationCommand() {
+        super("countrypop", "Display the population of a specific country (usage: countrypop <country_name>)");
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.napier.sem.commands;
 
-import com.napier.sem.ICommand;
+import com.napier.sem.CommandBase;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,13 +9,10 @@ import java.sql.SQLException;
 /**
  * Command to display top N cities by population
  */
-public class TopCitiesCommand implements ICommand {
+public class TopCitiesCommand extends CommandBase {
 
-    public final String description = "Display top N cities by population (usage: topcities <number>)";
-
-    @Override
-    public String getDescription() {
-        return description;
+    public TopCitiesCommand() {
+        super("topcities", "Display top N cities by population (usage: topcities <number>)");
     }
 
     @Override

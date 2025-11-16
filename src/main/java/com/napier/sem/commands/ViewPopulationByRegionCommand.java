@@ -1,6 +1,6 @@
 package com.napier.sem.commands;
 
-import com.napier.sem.ICommand;
+import com.napier.sem.CommandBase;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,14 +10,10 @@ import java.sql.SQLException;
  * Command to view population details by region
  * Shows total, urban, and non-urban populations for a specific region
  */
-public class ViewPopulationByRegionCommand implements ICommand {
+public class ViewPopulationByRegionCommand extends CommandBase {
 
-    private final String description =
-            "View population details for a region (usage: regionpop <region_name>)";
-
-    @Override
-    public String getDescription() {
-        return description;
+    public ViewPopulationByRegionCommand() {
+        super("regionpop", "View population details for a region (usage: regionpop <region_name>)");
     }
 
     @Override
