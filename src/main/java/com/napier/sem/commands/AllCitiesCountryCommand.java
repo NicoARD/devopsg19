@@ -19,7 +19,7 @@ public class AllCitiesCountryCommand implements ICommand {
     public void execute(Connection connection, String[] args) throws SQLException {
         // Validate input
         if (args.length < 2 || args[1].trim().isEmpty()) {
-            System.out.println("❌ Please provide a valid country name. Usage: cities-country <country_name>");
+            System.out.println("ERROR: Please provide a valid country name. Usage: cities-country <country_name>");
             return;
         }
 
@@ -52,14 +52,14 @@ public class AllCitiesCountryCommand implements ICommand {
                 }
 
                 if (count == 0) {
-                    System.out.println("⚠️ No cities found for country: " + countryName);
+                    System.out.println("WARNING: No cities found for country: " + countryName);
                 } else {
                     System.out.println("==============================================================");
-                    System.out.println("✅ " + count + " cities found.");
+                    System.out.println(count + " cities found.");
                 }
             }
         } catch (SQLException e) {
-            System.out.println("❌ Error executing query: " + e.getMessage());
+            System.out.println("ERROR: Error executing query: " + e.getMessage());
             throw e;
         }
     }

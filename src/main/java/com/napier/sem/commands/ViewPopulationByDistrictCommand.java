@@ -23,7 +23,7 @@ public class ViewPopulationByDistrictCommand implements ICommand {
     public void execute(Connection connection, String[] args) throws SQLException {
         // Validate input
         if (args.length < 2 || args[1].trim().isEmpty()) {
-            System.out.println("❌ Please provide a valid district name. Usage: districtpop <district_name>");
+            System.out.println("ERROR: Please provide a valid district name. Usage: districtpop <district_name>");
             return;
         }
 
@@ -42,17 +42,17 @@ public class ViewPopulationByDistrictCommand implements ICommand {
                     long totalPop = rs.getLong("TotalPopulation");
 
                     if (rs.wasNull() || totalPop == 0) {
-                        System.out.println("⚠️ No data found for district: " + districtName);
+                        System.out.println("WARNING: No data found for district: " + districtName);
                     } else {
-                        System.out.printf("✅ Total population of district '%s' is %,d people.%n",
+                        System.out.printf("Total population of district '%s' is %,d people.%n",
                                 districtName, totalPop);
                     }
                 } else {
-                    System.out.println("⚠️ No data found for district: " + districtName);
+                    System.out.println("WARNING: No data found for district: " + districtName);
                 }
             }
         } catch (SQLException e) {
-            System.out.println("❌ Error executing query: " + e.getMessage());
+            System.out.println("ERROR: Error executing query: " + e.getMessage());
             throw e;
         }
     }

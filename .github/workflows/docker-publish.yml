@@ -30,15 +30,15 @@ jobs:
       run: |
         echo "Testing Docker image..."
         docker images sem-methods:${{ github.sha }}
-        echo "✅ Docker image built successfully"
+        echo "Docker image built successfully"
         
     - name: Comment on PR
       uses: actions/github-script@v7
       if: github.event_name == 'pull_request'
       with:
         script: |
-          const buildStatus = '${{ job.status }}' === 'success' ? '✅ DOCKER BUILD PASSED' : '❌ DOCKER BUILD FAILED';
-          const commentBody = `## 🐳 Docker Build Results
+          const buildStatus = '${{ job.status }}' === 'success' ? 'DOCKER BUILD PASSED' : 'DOCKER BUILD FAILED';
+          const commentBody = `## Docker Build Results
           
           **Status:** ${buildStatus}
           **Image:** sem-methods:${{ github.sha }}
