@@ -6,6 +6,13 @@ jobs:
     name: Build and Test Population Reports
     runs-on: ubuntu-22.04
     
+    env:
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: world
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: example
+    
     services:
       mysql:
         image: mysql:8.0
@@ -15,13 +22,13 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mysqladmin ping -pexample"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=3
+          --health-retries=5
     
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         
       - name: Set up JDK 17
@@ -29,30 +36,50 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-          
+
+      - name: Install MySQL Client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+
+      - name: Wait for MySQL to be ready
+        run: |
+          echo "Waiting for MySQL to become ready..."
+          for i in {1..30}; do
+            if mysqladmin ping -h 127.0.0.1 -P 3306 -u root -pexample --silent; then
+              echo "MySQL is ready!"
+              break
+            fi
+            echo "Waiting for MySQL... ($i/30)"
+            sleep 2
+          done
+
       - name: Initialize database
         run: |
-          if [ -f "databases/world.sql" ]; then
-            mysql -h 127.0.0.1 -P 3306 -u root -pexample world < databases/world.sql
-          fi
-          if [ -f "databases/init-permissions.sql" ]; then
-            mysql -h 127.0.0.1 -P 3306 -u root -pexample world < databases/init-permissions.sql
-          fi
+          echo "Loading world database schema and data..."
+          mysql -h 127.0.0.1 -P 3306 -u root -pexample < databases/world.sql
           
-      - name: Compile with Maven
+          echo "Setting up database permissions..."
+          mysql -h 127.0.0.1 -P 3306 -u root -pexample < databases/init-permissions.sql
+          
+          echo "Verifying database setup..."
+          mysql -h 127.0.0.1 -P 3306 -u devuser -pexample world -e "SELECT COUNT(*) as city_count FROM city LIMIT 1;"
+          mysql -h 127.0.0.1 -P 3306 -u devuser -pexample world -e "SELECT COUNT(*) as country_count FROM country LIMIT 1;"
+
+      - name: Compile project
         run: mvn compile
         
-      - name: Run tests
+      - name: Run unit tests
         run: mvn test
         
-      - name: Package JAR
+      - name: Package executable JAR
         run: mvn package
         
-      - name: Build Docker Image
+      - name: Build Docker image
         run: docker build -t sem-methods .
         
-      - name: Run image
+      - name: Run Docker container
         run: docker run --name sem-methods-container -d sem-methods
         
-      - name: View logs
+      - name: View container logs
         run: docker logs sem-methods-container

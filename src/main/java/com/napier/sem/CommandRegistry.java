@@ -20,6 +20,22 @@ public class CommandRegistry {
         registerCommand("topcountries", new TopCountriesCommand());
 
         registerCommand("topcities", new TopCitiesCommand());
+
+        registerCommand("regionpop", new ViewPopulationByRegionCommand());
+
+        registerCommand("languagedist", new ViewGlobalLanguageDistributionCommand());
+
+        registerCommand("districtpop", new ViewPopulationByDistrictCommand());
+
+        registerCommand("topcapitals", new TopCapitalCitiesCommand());
+
+        registerCommand("countrypop", new CountryPopulationCommand());
+
+        registerCommand("citypop", new CityPopulationCommand());
+
+
+
+
     }
 
     /**

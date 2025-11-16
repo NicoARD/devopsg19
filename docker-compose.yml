@@ -16,7 +16,6 @@ services:
     networks:
       - sem-net
 
-  
   db:
     image: mysql:8.0
     restart: always
@@ -27,12 +26,17 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql-/var/lib/mysql
       - ./databases/world.sql:/docker-entrypoint-initdb.d/01-world.sql:ro
       - ./databases/init-permissions.sql:/docker-entrypoint-initdb.d/02-init-permissions.sql:ro
     networks:
       - sem-net
-    
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "devuser", "-pdevpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 networks:
   sem-net:
     driver: bridge
