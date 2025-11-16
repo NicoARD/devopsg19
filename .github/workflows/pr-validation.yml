@@ -13,6 +13,13 @@ jobs:
   validate:
     runs-on: ubuntu-22.04
     
+    env:
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: world
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: example
+    
     services:
       mysql:
         image: mysql:8.0
@@ -36,15 +43,33 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
+    
+    - name: Install MySQL Client
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mysql-client
+        
+    - name: Wait for MySQL to be ready
+      run: |
+        for i in {1..30}; do
+          if mysqladmin ping -h 127.0.0.1 -P 3306 -u root -pexample --silent; then
+            echo "MySQL is ready!"
+            break
+          fi
+          echo "Waiting for MySQL... ($i/30)"
+          sleep 2
+        done
         
     - name: Initialize database
       run: |
-        if [ -f "databases/world.sql" ]; then
-          mysql -h 127.0.0.1 -P 3306 -u root -pexample world < databases/world.sql
-        fi
-        if [ -f "databases/init-permissions.sql" ]; then
-          mysql -h 127.0.0.1 -P 3306 -u root -pexample world < databases/init-permissions.sql
-        fi
+        echo "Loading world database schema and data..."
+        mysql -h 127.0.0.1 -P 3306 -u root -pexample < databases/world.sql
+        
+        echo "Setting up database permissions..."
+        mysql -h 127.0.0.1 -P 3306 -u root -pexample < databases/init-permissions.sql
+        
+        echo "Verifying database setup..."
+        mysql -h 127.0.0.1 -P 3306 -u devuser -pexample world -e "SELECT COUNT(*) as table_count FROM information_schema.tables WHERE table_schema='world';"
         
     - name: Compile with Maven
       run: mvn compile

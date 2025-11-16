@@ -6,6 +6,13 @@ jobs:
     name: Build and Test Population Reports
     runs-on: ubuntu-22.04
     
+    env:
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: world
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: example
+    
     services:
       mysql:
         image: mysql:8.0
@@ -30,35 +37,34 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      # 🔧 WAIT for MySQL to be fully ready (important fix)
-      - name: Wait for MySQL
+      - name: Install MySQL Client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+
+      - name: Wait for MySQL to be ready
         run: |
           echo "Waiting for MySQL to become ready..."
-          for i in {1..15}; do
-            if mysqladmin ping -h 127.0.0.1 -pexample --silent; then
+          for i in {1..30}; do
+            if mysqladmin ping -h 127.0.0.1 -P 3306 -u root -pexample --silent; then
               echo "MySQL is ready!"
               break
             fi
-            echo "Still waiting..."
-            sleep 4
+            echo "Waiting for MySQL... ($i/30)"
+            sleep 2
           done
 
-      # 🗄 Initialize DB (import world.sql + create user permissions with valid MySQL 8 syntax)
       - name: Initialize database
         run: |
-          if [ -f "databases/world.sql" ]; then
-            echo "Importing world.sql..."
-            mysql -h 127.0.0.1 -P 3306 -u root -pexample world < databases/world.sql
-          fi
-
-          echo "Applying database permissions..."
-
-          mysql -h 127.0.0.1 -P 3306 -u root -pexample <<EOF
-          DROP USER IF EXISTS 'worlduser'@'%';
-          CREATE USER 'worlduser'@'%' IDENTIFIED BY 'world123';
-          GRANT ALL PRIVILEGES ON world.* TO 'worlduser'@'%';
-          FLUSH PRIVILEGES;
-          EOF
+          echo "Loading world database schema and data..."
+          mysql -h 127.0.0.1 -P 3306 -u root -pexample < databases/world.sql
+          
+          echo "Setting up database permissions..."
+          mysql -h 127.0.0.1 -P 3306 -u root -pexample < databases/init-permissions.sql
+          
+          echo "Verifying database setup..."
+          mysql -h 127.0.0.1 -P 3306 -u devuser -pexample world -e "SELECT COUNT(*) as city_count FROM city LIMIT 1;"
+          mysql -h 127.0.0.1 -P 3306 -u devuser -pexample world -e "SELECT COUNT(*) as country_count FROM country LIMIT 1;"
 
       - name: Compile project
         run: mvn compile
