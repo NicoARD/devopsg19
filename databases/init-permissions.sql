@@ -1,11 +1,9 @@
 -- Grant permissions to devuser for the world database
 -- This script runs after world.sql due to alphabetical ordering (02- after 01-)
 
--- Grant all privileges on world database to devuser
-/*GRANT ALL PRIVILEGES ON world.* TO 'devuser'@'%';*/
-
 CREATE USER IF NOT EXISTS 'devuser'@'%' IDENTIFIED BY 'example';
-GRANT ALL PRIVILEGES ON *.* TO 'devuser'@'%';
+
+GRANT ALL PRIVILEGES ON world.* TO 'devuser'@'%';
 
 -- Flush privileges to ensure changes take effect
 FLUSH PRIVILEGES;
