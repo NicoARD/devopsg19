@@ -1,4 +1,4 @@
-package com.napier.sem.commands;
+package com.napier.sem.commands.city;
 
 import com.napier.sem.CommandBase;
 import java.sql.*;

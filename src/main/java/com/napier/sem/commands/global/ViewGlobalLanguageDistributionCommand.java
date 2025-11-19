@@ -1,4 +1,4 @@
-package com.napier.sem.commands;
+package com.napier.sem.commands.global;
 
 import com.napier.sem.CommandBase;
 
@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
 
 /**
  * Command to view global language distributions:
@@ -14,10 +13,6 @@ import java.util.*;
  * sorted descending by population and percentage of world population.
  */
 public class ViewGlobalLanguageDistributionCommand extends CommandBase {
-
-    private static final List<String> TARGET_LANGUAGES = Arrays.asList(
-            "Chinese", "English", "Hindi", "Spanish", "Arabic"
-    );
 
     public ViewGlobalLanguageDistributionCommand() {
         super("languagedist", "Display number and percentage of people speaking Chinese, English, Hindi, Spanish, or Arabic globally.");

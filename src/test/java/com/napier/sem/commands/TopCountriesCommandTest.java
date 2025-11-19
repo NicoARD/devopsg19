@@ -1,5 +1,6 @@
 package com.napier.sem.commands;
 
+import com.napier.sem.commands.country.TopCountriesCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;

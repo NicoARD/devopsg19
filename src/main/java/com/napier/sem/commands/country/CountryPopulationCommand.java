@@ -1,4 +1,4 @@
-package com.napier.sem.commands;
+package com.napier.sem.commands.country;
 
 import com.napier.sem.CommandBase;
 
@@ -68,27 +68,15 @@ public class CountryPopulationCommand extends CommandBase {
 
         // - population NOT living in cities (non-urban)
 
-        String sql = """
-
-                SELECT
-
-                    c.Name AS Country,
-
-                    c.Population AS TotalPopulation,
-
-                    SUM(ci.Population) AS UrbanPopulation,
-
-                    (c.Population - SUM(ci.Population)) AS NonUrbanPopulation
-
-                FROM country c
-
-                LEFT JOIN city ci ON c.Code = ci.CountryCode
-
-                WHERE c.Name = ?
-
-                GROUP BY c.Code;
-
-                """;
+        String sql = "SELECT " +
+                "c.Name AS Country, " +
+                "c.Population AS TotalPopulation, " +
+                "SUM(ci.Population) AS UrbanPopulation, " +
+                "(c.Population - SUM(ci.Population)) AS NonUrbanPopulation " +
+                "FROM country c " +
+                "LEFT JOIN city ci ON c.Code = ci.CountryCode " +
+                "WHERE c.Name = ? " +
+                "GROUP BY c.Code";
 
         // ----  Execute Query with Error Handling ----
 

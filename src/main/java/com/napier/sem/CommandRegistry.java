@@ -3,7 +3,11 @@ package com.napier.sem;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.napier.sem.commands.*;
+import com.napier.sem.commands.city.*;
+import com.napier.sem.commands.country.*;
+import com.napier.sem.commands.district.*;
+import com.napier.sem.commands.region.*;
+import com.napier.sem.commands.global.*;
 
 /**
  * Registry for managing commands

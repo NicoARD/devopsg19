@@ -2,7 +2,7 @@ package com.napier.sem;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-//
+
 /**
  * Interface for database commands
  */

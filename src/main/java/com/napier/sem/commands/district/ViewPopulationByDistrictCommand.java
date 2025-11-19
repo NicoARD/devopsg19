@@ -1,4 +1,4 @@
-package com.napier.sem.commands;
+package com.napier.sem.commands.district;
 
 import com.napier.sem.CommandBase;
 
