@@ -34,6 +34,9 @@ public class CountryPopulationCommand extends CommandBase {
         super("countrypop", "Display the population of a specific country (usage: countrypop <country_name>)");
     }
 
+    /**
+     * Retrieves and displays population details for a specific country including urban and non-urban breakdown.
+     */
     @Override
 
     public void execute(Connection connection, String[] args) throws SQLException {

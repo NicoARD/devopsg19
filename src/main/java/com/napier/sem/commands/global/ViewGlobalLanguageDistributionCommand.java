@@ -18,6 +18,9 @@ public class ViewGlobalLanguageDistributionCommand extends CommandBase {
         super("languagedist", "Display number and percentage of people speaking Chinese, English, Hindi, Spanish, or Arabic globally.");
     }
 
+    /**
+     * Retrieves and displays global language distribution showing speakers and percentages for major world languages.
+     */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
         System.out.println("\n Global Language Distribution Report");

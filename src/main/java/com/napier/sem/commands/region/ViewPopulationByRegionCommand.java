@@ -16,6 +16,9 @@ public class ViewPopulationByRegionCommand extends CommandBase {
         super("regionpop", "View population details for a region (usage: regionpop <region_name>)");
     }
 
+    /**
+     * Retrieves and displays population details for a specific region including total, urban, and non-urban populations.
+     */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
         // Validate input

@@ -17,6 +17,9 @@ public class TopCitiesByDistrictCommand extends CommandBase {
         super("topcities-district", "Display top N cities by population in a specific district (usage: topcities-district <district> <number>)");
     }
 
+    /**
+     * Retrieves and displays the top N most populated cities in a specific district.
+     */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
         // ---- Input Validation ----

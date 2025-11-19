@@ -21,6 +21,9 @@ public class TopCapitalCitiesCommand extends CommandBase {
         super("topcapitals", "Display the top N populated capital cities in the world (usage: topcapitals <number>)");
     }
 
+    /**
+     * Retrieves and displays the top N most populated capital cities in the world.
+     */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
         // ---- Input Validation ----

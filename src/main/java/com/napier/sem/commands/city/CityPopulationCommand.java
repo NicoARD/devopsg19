@@ -23,6 +23,9 @@ public class CityPopulationCommand extends CommandBase {
         super("citypop", "Display the population of a specific city (usage: citypop <city_name>)");
     }
 
+    /**
+     * Retrieves and displays population details for a specific city including urban and non-urban breakdown.
+     */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
 

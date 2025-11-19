@@ -15,6 +15,9 @@ public class TopCitiesCommand extends CommandBase {
         super("topcities", "Display top N cities by population (usage: topcities <number>)");
     }
 
+    /**
+     * Retrieves and displays the top N most populated cities in the world.
+     */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
         int count = 5; // Default value

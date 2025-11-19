@@ -16,6 +16,9 @@ public class ViewPopulationByDistrictCommand extends CommandBase {
         super("districtpop", "View population of a specific district (usage: districtpop <district_name>)");
     }
 
+    /**
+     * Retrieves and displays the total population of a specific district.
+     */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
         // Validate input

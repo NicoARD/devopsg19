@@ -12,6 +12,9 @@ public class AllCitiesCountryCommand extends CommandBase {
         super("cities-country", "Display all cities in a country ordered by population (usage: cities-country <country_name>)");
     }
 
+    /**
+     * Retrieves and displays all cities in a specific country ordered by population from largest to smallest.
+     */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
         // Validate input

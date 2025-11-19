@@ -15,6 +15,9 @@ public class TopCountriesCommand extends CommandBase {
         super("topcountries", "Display top N countries by population (usage: topcountries <number>)");
     }
     
+    /**
+     * Retrieves and displays the top N most populated countries in the world.
+     */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
         int count = 5; // default value
