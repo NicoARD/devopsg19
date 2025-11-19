@@ -1,6 +1,6 @@
-package com.napier.sem.commands;
+package com.napier.sem.commands.city;
 
-import com.napier.sem.ICommand;
+import com.napier.sem.CommandBase;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,16 +17,15 @@ import java.sql.SQLException;
  *
  * Usage: citypop <city_name>
  */
-public class CityPopulationCommand implements ICommand {
+public class CityPopulationCommand extends CommandBase {
 
-    private final String description =
-            "Display the population of a specific city (usage: citypop <city_name>)";
-
-    @Override
-    public String getDescription() {
-        return description;
+    public CityPopulationCommand() {
+        super("citypop", "Display the population of a specific city (usage: citypop <city_name>)");
     }
 
+    /**
+     * Retrieves and displays population details for a specific city including urban and non-urban breakdown.
+     */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
 

@@ -1,28 +1,28 @@
-package com.napier.sem.commands;
+package com.napier.sem.commands.city;
 
-import com.napier.sem.ICommand;
+import com.napier.sem.CommandBase;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Command to display top N countries by population.
+ * Command to display top N cities by population
  */
-public class TopCountriesCommand implements ICommand {
-    
-    public final String description = "Display top N countries by population (usage: topcountries <number>)";
-    
-    @Override
-    public String getDescription() {
-        return description;
+public class TopCitiesCommand extends CommandBase {
+
+    public TopCitiesCommand() {
+        super("topcities", "Display top N cities by population (usage: topcities <number>)");
     }
-    
+
+    /**
+     * Retrieves and displays the top N most populated cities in the world.
+     */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
-        int count = 5; // default value
-        
-        // Parse the count argument if provided
+        int count = 5; // Default value
+
+        // Input validation for N
         if (args.length > 1) {
             try {
                 count = Integer.parseInt(args[1]);
@@ -35,26 +35,33 @@ public class TopCountriesCommand implements ICommand {
                 count = 5;
             }
         }
-        
-        String query = "SELECT Name, Population, Continent FROM country ORDER BY Population DESC LIMIT ?";
-        
+
+        String query = "SELECT c.Name, c.Population, c.District, co.Name AS Country "
+                + "FROM city c "
+                + "JOIN country co ON c.CountryCode = co.Code "
+                + "ORDER BY c.Population DESC "
+                + "LIMIT ?";
+
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, count);
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
-                System.out.println("Top " + count + " Countries by Population:");
+                System.out.println("Top " + count + " Cities by Population:");
                 System.out.println("========================================");
-                
+
                 int rank = 1;
                 while (rs.next()) {
-                    String name = rs.getString("Name");
+                    String cityName = rs.getString("Name");
+                    String country = rs.getString("Country");
+                    String district = rs.getString("District");
                     long population = rs.getLong("Population");
-                    String continent = rs.getString("Continent");
-                    System.out.printf("%d. %s (%s) - %,d people%n", rank++, name, continent, population);
+
+                    System.out.printf("%d. %s, %s (%s) - %,d people%n",
+                            rank++, cityName, district, country, population);
                 }
-                
+
                 if (rank == 1) {
-                    System.out.println("No countries found in the database.");
+                    System.out.println("No cities found in the database.");
                 }
             }
         } catch (SQLException e) {

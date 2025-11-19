@@ -1,6 +1,6 @@
-package com.napier.sem.commands;
+package com.napier.sem.commands.country;
 
-import com.napier.sem.ICommand;
+import com.napier.sem.CommandBase;
 
 import java.sql.Connection;
 
@@ -28,20 +28,15 @@ import java.sql.SQLException;
 
  */
 
-public class CountryPopulationCommand implements ICommand {
+public class CountryPopulationCommand extends CommandBase {
 
-    private final String description =
-
-            "Display the population of a specific country (usage: countrypop <country_name>)";
-
-    @Override
-
-    public String getDescription() {
-
-        return description;
-
+    public CountryPopulationCommand() {
+        super("countrypop", "Display the population of a specific country (usage: countrypop <country_name>)");
     }
 
+    /**
+     * Retrieves and displays population details for a specific country including urban and non-urban breakdown.
+     */
     @Override
 
     public void execute(Connection connection, String[] args) throws SQLException {
@@ -76,27 +71,15 @@ public class CountryPopulationCommand implements ICommand {
 
         // - population NOT living in cities (non-urban)
 
-        String sql = """
-
-                SELECT
-
-                    c.Name AS Country,
-
-                    c.Population AS TotalPopulation,
-
-                    SUM(ci.Population) AS UrbanPopulation,
-
-                    (c.Population - SUM(ci.Population)) AS NonUrbanPopulation
-
-                FROM country c
-
-                LEFT JOIN city ci ON c.Code = ci.CountryCode
-
-                WHERE c.Name = ?
-
-                GROUP BY c.Code;
-
-                """;
+        String sql = "SELECT " +
+                "c.Name AS Country, " +
+                "c.Population AS TotalPopulation, " +
+                "SUM(ci.Population) AS UrbanPopulation, " +
+                "(c.Population - SUM(ci.Population)) AS NonUrbanPopulation " +
+                "FROM country c " +
+                "LEFT JOIN city ci ON c.Code = ci.CountryCode " +
+                "WHERE c.Name = ? " +
+                "GROUP BY c.Code";
 
         // ----  Execute Query with Error Handling ----
 

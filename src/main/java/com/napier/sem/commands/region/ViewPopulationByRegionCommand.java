@@ -1,6 +1,6 @@
-package com.napier.sem.commands;
+package com.napier.sem.commands.region;
 
-import com.napier.sem.ICommand;
+import com.napier.sem.CommandBase;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,16 +10,15 @@ import java.sql.SQLException;
  * Command to view population details by region
  * Shows total, urban, and non-urban populations for a specific region
  */
-public class ViewPopulationByRegionCommand implements ICommand {
+public class ViewPopulationByRegionCommand extends CommandBase {
 
-    private final String description =
-            "View population details for a region (usage: regionpop <region_name>)";
-
-    @Override
-    public String getDescription() {
-        return description;
+    public ViewPopulationByRegionCommand() {
+        super("regionpop", "View population details for a region (usage: regionpop <region_name>)");
     }
 
+    /**
+     * Retrieves and displays population details for a specific region including total, urban, and non-urban populations.
+     */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
         // Validate input
@@ -31,21 +30,19 @@ public class ViewPopulationByRegionCommand implements ICommand {
         String region = args[1].trim();
 
         // SQL query to fetch population details for a region
-        String query = """
-                SELECT 
-                    r.Region AS Region,
-                    SUM(c.Population) AS TotalPopulation,
-                    SUM(ci.Population) AS UrbanPopulation,
-                    (SUM(c.Population) - SUM(ci.Population)) AS NonUrbanPopulation
-                FROM country c
-                JOIN city ci ON c.Code = ci.CountryCode
-                JOIN (
-                    SELECT DISTINCT Region FROM country
-                ) r ON c.Region = r.Region
-                WHERE c.Region LIKE ?
-                GROUP BY r.Region
-                ORDER BY TotalPopulation DESC;
-                """;
+        String query = "SELECT " +
+                "r.Region AS Region, " +
+                "SUM(c.Population) AS TotalPopulation, " +
+                "SUM(ci.Population) AS UrbanPopulation, " +
+                "(SUM(c.Population) - SUM(ci.Population)) AS NonUrbanPopulation " +
+                "FROM country c " +
+                "JOIN city ci ON c.Code = ci.CountryCode " +
+                "JOIN ( " +
+                "SELECT DISTINCT Region FROM country " +
+                ") r ON c.Region = r.Region " +
+                "WHERE c.Region LIKE ? " +
+                "GROUP BY r.Region " +
+                "ORDER BY TotalPopulation DESC";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, "%" + region + "%");
