@@ -31,6 +31,8 @@ public class CommandRegistry {
         registerCommand(new CityPopulationCommand());
         registerCommand(new AllCitiesCountryCommand());
         registerCommand(new TopCitiesByDistrictCommand());
+        registerCommand(new TopCapitalCitiesByRegionCommand());
+
     }
 
     /**
