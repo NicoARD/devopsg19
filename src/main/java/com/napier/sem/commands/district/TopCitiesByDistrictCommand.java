@@ -85,14 +85,4 @@ public class TopCitiesByDistrictCommand extends CommandBase {
             throw e;
         }
     }
-
-    @Override
-    public String getName() {
-        return "";
-    }
-
-    @Override
-    public void execute(String[] args) {
-
-    }
 }

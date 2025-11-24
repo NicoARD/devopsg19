@@ -6,7 +6,7 @@ import java.sql.*;
 /**
  * Command to display all cities in a specific country ordered by population (largest to smallest).
  */
-public abstract class AllCitiesCountryCommand extends CommandBase {
+public class AllCitiesCountryCommand extends CommandBase {
 
     public AllCitiesCountryCommand() {
         super("cities-country", "Display all cities in a country ordered by population (usage: cities-country <country_name>)");
