@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class TopCitiesCommand extends CommandBase {
 
     public TopCitiesCommand() {
-        super("top-cities", "Display top N cities by population (usage: topcities <number>)");
+        super("top-cities", "Display top N cities by population (usage: top-cities <number>)");
     }
 
     /**

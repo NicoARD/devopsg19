@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class ViewPopulationByRegionCommand extends CommandBase {
 
     public ViewPopulationByRegionCommand() {
-        super("region-pop", "View population details for a region (usage: regionpop <region_name>)");
+        super("region-pop", "View population details for a region (usage: region-pop <region_name>)");
     }
 
     /**

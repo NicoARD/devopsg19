@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public class TopCitiesByDistrictCommand extends CommandBase {
 
     public TopCitiesByDistrictCommand() {
-        super("topcities-district", "Display top N cities by population in a specific district (usage: topcities-district <district> <number>)");
+        super("top-cities-district", "Display top N cities by population in a specific district (usage: top-cities-district <district> <number>)");
     }
 
     /**

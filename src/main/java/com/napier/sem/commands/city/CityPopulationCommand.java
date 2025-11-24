@@ -20,7 +20,7 @@ import java.sql.SQLException;
 public class CityPopulationCommand extends CommandBase {
 
     public CityPopulationCommand() {
-        super("city-pop", "Display the population of a specific city (usage: citypop <city_name>)");
+        super("city-pop", "Display the population of a specific city (usage: city-pop <city_name>)");
     }
 
     /**
