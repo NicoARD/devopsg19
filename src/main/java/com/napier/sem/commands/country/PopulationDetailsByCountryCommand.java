@@ -1,83 +1,79 @@
 package com.napier.sem.commands.country;
 
-import com.napier.sem.DatabaseConfig;
-import com.napier.sem.ICommand;
+import com.napier.sem.CommandBase;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public abstract class PopulationDetailsByCountryCommand implements ICommand {
+/**
+ * View Population Details of a Specific Country
+ */
+public class PopulationDetailsByCountryCommand extends CommandBase {
 
-    @Override
-    public String getName() {
-        return "population-details-country";
+    public PopulationDetailsByCountryCommand() {
+        super("populationdetailscountry", "Display population details for a specific country (usage: population-details-country <country_name>)");
     }
 
+    /**
+     * Retrieves and displays population details for a specific country including urban and non-urban breakdown.
+     */
     @Override
-    public void execute(String[] args) {
-        try {
-            // -------------------------
-            // INPUT VALIDATION
-            // -------------------------
-            if (args.length < 1) {
-                System.out.println("Usage: population-details-country <country_name>");
-                return;
-            }
+    public void execute(Connection connection, String[] args) throws SQLException {
+        // ----  Input Validation ----
+        if (args.length < 2) {
+            System.out.println("  Please provide a country name. Usage: population-details-country <country_name>");
+            return;
+        }
 
-            String countryName = args[0];
+        String countryName = args[1].trim();
 
-            if (countryName.trim().isEmpty()) {
-                System.out.println("Error: country name cannot be empty.");
-                return;
-            }
+        if (countryName.isEmpty()) {
+            System.out.println(" Invalid input. Country name cannot be empty.");
+            return;
+        }
 
-            // -------------------------
-            // SQL QUERY
-            // -------------------------
-            String sql = "SELECT " +
-                    "    co.Name AS Country, " +
-                    "    co.Population AS TotalPopulation, " +
-                    "    SUM(ci.Population) AS UrbanPopulation, " +
-                    "    (co.Population - SUM(ci.Population)) AS NonUrbanPopulation " +
-                    "FROM country co " +
-                    "LEFT JOIN city ci ON ci.CountryCode = co.Code " +
-                    "WHERE co.Name = ? " +
-                    "GROUP BY co.Name, co.Population;";
+        String sql = "SELECT " +
+                "c.Name AS Country, " +
+                "c.Population AS TotalPopulation, " +
+                "SUM(ci.Population) AS UrbanPopulation, " +
+                "(c.Population - SUM(ci.Population)) AS NonUrbanPopulation " +
+                "FROM country c " +
+                "LEFT JOIN city ci ON c.Code = ci.CountryCode " +
+                "WHERE c.Name = ? " +
+                "GROUP BY c.Code";
 
-            Connection conn = DatabaseConfig.getConnection();
-
-            if (conn == null) {
-                System.out.println("Database connection failed.");
-                return;
-            }
-
-            PreparedStatement stmt = conn.prepareStatement(sql);
+        // ----  Execute Query with Error Handling ----
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, countryName);
 
-            ResultSet rs = stmt.executeQuery();
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) {
+                    System.out.println(" No country found with the name: " + countryName);
+                    return;
+                }
 
-            if (!rs.next()) {
-                System.out.println("No data found for country: " + countryName);
-                return;
+                String name = rs.getString("Country");
+                long totalPop = rs.getLong("TotalPopulation");
+                long urbanPop = rs.getLong("UrbanPopulation");
+                long nonUrbanPop = rs.getLong("NonUrbanPopulation");
+
+                // Handle null results if the country has no cities
+                if (rs.wasNull()) {
+                    urbanPop = 0;
+                    nonUrbanPop = totalPop;
+                }
+
+                System.out.println("\n Population Details for " + name);
+                System.out.println("===========================================");
+                System.out.printf("Total Population:        %,d%n", totalPop);
+                System.out.printf("Urban (City) Population: %,d%n", urbanPop);
+                System.out.printf("Non-Urban Population:    %,d%n", nonUrbanPop);
             }
-
-            long total = rs.getLong("TotalPopulation");
-            long urban = rs.getLong("UrbanPopulation");
-            long nonUrban = rs.getLong("NonUrbanPopulation");
-
-            System.out.println("\nPopulation Details for " + countryName);
-            System.out.println("===========================================");
-            System.out.printf("Total Population:        %,d%n", total);
-            System.out.printf("Urban (City) Population: %,d%n", urban);
-            System.out.printf("Non-Urban Population:    %,d%n", nonUrban);
-
-            rs.close();
-            stmt.close();
-
-        } catch (Exception e) {
-            System.out.println("Error executing population-details-country: " + e.getMessage());
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println(" Database query failed: " + e.getMessage());
+            throw e;
         }
     }
 }
