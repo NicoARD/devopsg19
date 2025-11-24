@@ -1,6 +1,6 @@
-package com.napier.sem.commands;
+package com.napier.sem.commands.country;
 
-import com.napier.sem.ICommand;
+import com.napier.sem.CommandBase;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,15 +9,15 @@ import java.sql.SQLException;
 /**
  * Command to display top N countries by population.
  */
-public class TopCountriesCommand implements ICommand {
+public class TopCountriesCommand extends CommandBase {
     
-    public final String description = "Display top N countries by population (usage: topcountries <number>)";
-    
-    @Override
-    public String getDescription() {
-        return description;
+    public TopCountriesCommand() {
+        super("top-countries", "Display top N countries by population (usage: top-countries <number>)");
     }
     
+    /**
+     * Retrieves and displays the top N most populated countries in the world.
+     */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
         int count = 5; // default value

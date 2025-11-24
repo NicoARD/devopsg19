@@ -48,9 +48,9 @@ public class DatabaseConfig {
         
         dataSource = new HikariDataSource(config);
         
-        System.out.println("✅ Database connection pool initialized");
-        System.out.println("📍 JDBC URL: " + jdbcUrl);
-        System.out.println("👤 Username: " + username);
+        System.out.println("Database connection pool initialized");
+        System.out.println("JDBC URL: " + jdbcUrl);
+        System.out.println("Username: " + username);
     }
     
     /**
@@ -71,7 +71,7 @@ public class DatabaseConfig {
     public static void closeDataSource() {
         if (dataSource != null && !dataSource.isClosed()) {
             dataSource.close();
-            System.out.println("🔒 Database connection pool closed");
+            System.out.println("Database connection pool closed");
         }
     }
     

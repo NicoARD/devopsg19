@@ -1,9 +1,16 @@
 package com.napier.sem;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.napier.sem.commands.*;
+import com.napier.sem.commands.city.*;
+import com.napier.sem.commands.continent.*;
+import com.napier.sem.commands.country.*;
+import com.napier.sem.commands.district.*;
+import com.napier.sem.commands.region.*;
+import com.napier.sem.commands.global.*;
 
 /**
  * Registry for managing commands
@@ -16,17 +23,41 @@ public class CommandRegistry {
      * Initialize and register all available commands
      */
     public static void initializeCommands() {
-        // Register commands here!!
-        registerCommand("topcountries", new TopCountriesCommand());
+        // Register commands here - using their execution command from the object
+        registerCommand(new TopCountriesCommand());
+        registerCommand(new TopCitiesCommand());
+        registerCommand(new ViewPopulationByRegionCommand());
+        registerCommand(new ViewGlobalLanguageDistributionCommand());
+        registerCommand(new ViewPopulationByDistrictCommand());
+        registerCommand(new TopCapitalCitiesCommand());
+        registerCommand(new CountryPopulationCommand());
+        registerCommand(new CityPopulationCommand());
+        registerCommand(new AllCitiesCountryCommand());
+        registerCommand(new TopCitiesByDistrictCommand());
+        registerCommand(new TopCapitalCitiesByRegionCommand());
+        registerCommand(new TopCapitalCitiesByContinentCommand());
+        registerCommand(new PopulationDetailsByCountryCommand());
+        registerCommand(new CapitalCitiesByRegionCommand());
+        registerCommand(new PopulationByRegionCommand());
 
-        registerCommand("topcities", new TopCitiesCommand());
+
     }
 
     /**
-     * Register a command with a name
-     * @param name Command name
+     * Register a command using its execution command
      * @param command Command implementation
      */
+    public static void registerCommand(ICommand command) {
+        commands.put(command.getExcecutionCommand().toLowerCase(), command);
+    }
+    
+    /**
+     * Register a command with a specific name (for backwards compatibility or aliasing)
+     * @param name Command name
+     * @param command Command implementation
+     * @deprecated Use {@link #registerCommand(ICommand)} instead to use the command's execution command
+     */
+    @Deprecated
     public static void registerCommand(String name, ICommand command) {
         commands.put(name.toLowerCase(), command);
     }

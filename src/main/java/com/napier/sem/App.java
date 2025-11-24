@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 /**
  * Main application class for SEM Methods project
@@ -84,18 +85,38 @@ public class App {
         System.out.println("Available commands:");
         
         Map<String, ICommand> commands = CommandRegistry.getAllCommands();
-        
+
+        // ANSI colors
+        final String RESET = "\u001B[0m";
+        final String CYAN = "\u001B[36m";
+        final String YELLOW = "\u001B[33m";
+
+        // Include built-ins in max length calc
+        int maxLen = Stream.concat(
+                commands.keySet().stream(),
+                Stream.of("help", "exit")
+            )
+            .mapToInt(String::length)
+            .max()
+            .orElse(0);
+
         if (commands.isEmpty()) {
             System.out.println("No commands registered");
         } else {
             for (Map.Entry<String, ICommand> entry : commands.entrySet()) {
-                String name = entry.getKey();
-                String description = entry.getValue().getDescription();
-                System.out.println("  " + name + " - " + description);
+                String padded = String.format("%-" + maxLen + "s", entry.getKey());
+                System.out.println("  " + CYAN + padded + RESET + "  " + YELLOW + entry.getValue().getDescription() + RESET);
             }
         }
-        
-        System.out.println("  help - Show this help message");
-        System.out.println("  exit - Exit the application");
+
+        // Built-in commands (aligned + colored)
+        String helpPad = String.format("%-" + maxLen + "s", "help");
+        System.out.println("  " + CYAN + helpPad + RESET + "  " + YELLOW + "Show this help message" + RESET);
+
+        String exitPad = String.format("%-" + maxLen + "s", "exit");
+        System.out.println("  " + CYAN + exitPad + RESET + "  " + YELLOW + "Exit the application" + RESET);
+
+        System.out.println();
     }
+
 }

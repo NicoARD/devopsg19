@@ -1,24 +1,17 @@
-name: Build and Test
-
-on:
-  push:
-    branches: [ develop, master, main ]
-  pull_request:
-    branches: [ develop, master, main ]
-
-permissions:
-  contents: read
-  actions: read
-  security-events: write
-  issues: write
-  pull-requests: write
+name: DevOps Population Reporting System
+on: push
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  build:
+    name: Build and Test Population Reports
+    runs-on: ubuntu-22.04
     
     env:
-      CI: true
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: world
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: example
     
     services:
       mysql:
@@ -29,198 +22,71 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mysqladmin ping -pexample"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=3
+          --health-retries=5
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-    
-    - name: Cache Maven dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
-    
-    - name: Wait for MySQL to be ready
-      run: |
-        until mysqladmin ping -h 127.0.0.1 -P 3306 -u root -pexample --silent; do
-          echo 'Waiting for MySQL...'
-          sleep 2
-        done
-        echo 'MySQL is ready!'
-    
-    - name: Initialize database
-      run: |
-        # Check if database files exist and initialize if they do
-        if [ -f "databases/world.sql" ]; then
-          echo "Initializing world database..."
-          mysql -h 127.0.0.1 -P 3306 -u root -pexample world < databases/world.sql || echo "World.sql initialization completed with warnings"
-        else
-          echo "No world.sql found, creating basic test structure..."
-          mysql -h 127.0.0.1 -P 3306 -u root -pexample -e "
-            USE world;
-            CREATE TABLE IF NOT EXISTS country (
-              Code CHAR(3) PRIMARY KEY,
-              Name CHAR(52) NOT NULL,
-              Continent ENUM('Asia','Europe','North America','Africa','Oceania','Antarctica','South America') NOT NULL,
-              Population INT NOT NULL DEFAULT 0
-            );
-            INSERT IGNORE INTO country (Code, Name, Continent, Population) VALUES
-            ('CHN', 'China', 'Asia', 1400000000),
-            ('USA', 'United States', 'North America', 331000000);
-          "
-        fi
+      - name: Checkout repository
+        uses: actions/checkout@v4
         
-        if [ -f "databases/init-permissions.sql" ]; then
-          echo "Initializing permissions..."
-          mysql -h 127.0.0.1 -P 3306 -u root -pexample world < databases/init-permissions.sql || echo "Permissions initialization completed with warnings"
-        fi
-    
-    - name: Compile project
-      run: mvn clean compile
-    
-    - name: Run tests
-      run: |
-        # Run all tests, integration tests will be skipped if CI environment variable conditions aren't met
-        mvn test -Dmaven.test.failure.ignore=false
-    
-    - name: Build JAR
-      run: mvn clean package -DskipTests
-    
-    - name: Upload JAR artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: jar-artifact
-        path: target/seMethods-1.0-SNAPSHOT.jar
-        retention-days: 30
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
 
-  docker-build:
-    runs-on: ubuntu-latest
-    needs: test
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-    
-    - name: Build Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./Dockerfile
-        push: false
-        tags: |
-          napier-sem:latest
-          napier-sem:${{ github.sha }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-    
-    - name: Test Docker image
-      run: |
-        docker build -t napier-sem:test .
-        echo "Docker image built successfully"
-        docker images napier-sem:test
-    
-    - name: Save Docker image as artifact
-      run: |
-        docker save napier-sem:test | gzip > napier-sem-image.tar.gz
-    
-    - name: Upload Docker image artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: docker-image
-        path: napier-sem-image.tar.gz
-        retention-days: 30
+      - name: Install MySQL Client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
 
-  security-scan:
-    runs-on: ubuntu-latest
-    needs: test
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-    
-    - name: Cache Maven dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
-    
-    - name: Run OWASP Dependency Check
-      run: |
-        mvn org.owasp:dependency-check-maven:check
-      continue-on-error: true
-    
-    - name: Upload security report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: security-report
-        path: target/dependency-check-report.html
-        retention-days: 30
+      - name: Wait for MySQL to be ready
+        run: |
+          echo "Waiting for MySQL to become ready..."
+          for i in {1..30}; do
+            if mysqladmin ping -h 127.0.0.1 -P 3306 -u root -pexample --silent; then
+              echo "MySQL is ready!"
+              break
+            fi
+            echo "Waiting for MySQL... ($i/30)"
+            sleep 2
+          done
 
-  release:
-    runs-on: ubuntu-latest
-    needs: [test, docker-build]
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
-    permissions:
-      contents: write
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Download JAR artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: jar-artifact
-        path: ./artifacts
-    
-    - name: Download Docker image artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: docker-image
-        path: ./artifacts
-    
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
-      if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
-      with:
-        tag_name: v${{ github.run_number }}
-        name: Release v${{ github.run_number }}
-        body: |
-          Automated release from ${{ github.ref }}
+      - name: Initialize database
+        run: |
+          echo "Loading world database schema and data..."
+          mysql -h 127.0.0.1 -P 3306 -u root -pexample < databases/world.sql
           
-          ## Changes
-          - Built from commit: ${{ github.sha }}
-          - JAR artifact included
-          - Docker image available
+          echo "Setting up database permissions..."
+          mysql -h 127.0.0.1 -P 3306 -u root -pexample < databases/init-permissions.sql
           
-          ## Artifacts
-          - JAR: seMethods-1.0-SNAPSHOT.jar
-          - Docker Image: napier-sem-image.tar.gz
-        files: |
-          ./artifacts/seMethods-1.0-SNAPSHOT.jar
-          ./artifacts/napier-sem-image.tar.gz
-        draft: false
-        prerelease: false
+          echo "Verifying database setup..."
+          mysql -h 127.0.0.1 -P 3306 -u devuser -pexample world -e "SELECT COUNT(*) as city_count FROM city LIMIT 1;"
+          mysql -h 127.0.0.1 -P 3306 -u devuser -pexample world -e "SELECT COUNT(*) as country_count FROM country LIMIT 1;"
+
+      - name: Compile project
+        run: mvn compile
+        
+      - name: Run unit tests with coverage
+        run: mvn test
+        
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./target/site/jacoco/jacoco.xml
+          format: jacoco
+        
+      - name: Package executable JAR
+        run: mvn package
+        
+      - name: Build Docker image
+        run: docker build -t sem-methods .
+        
+      - name: Run Docker container
+        run: docker run --name sem-methods-container -d sem-methods
+        
+      - name: View container logs
+        run: docker logs sem-methods-container

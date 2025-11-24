@@ -1,4 +1,4 @@
-package com.napier.sem.commands;
+package com.napier.sem.commands.city;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -16,11 +16,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
- * Unit tests for TopCountriesCommand
+ * Unit tests for TopCapitalCitiesCommand
  */
-class TopCountriesCommandTest {
+class TopCapitalCitiesCommandTest {
 
-    private TopCountriesCommand command;
+    private TopCapitalCitiesCommand command;
     
     @Mock
     private Connection mockConnection;
@@ -34,58 +34,56 @@ class TopCountriesCommandTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        command = new TopCountriesCommand();
+        command = new TopCapitalCitiesCommand();
     }
 
+    @Test
+    @DisplayName("Should have proper execution command")
+    void testExecutionCommand() {
+        assertEquals("top-capitals", command.getExcecutionCommand());
+    }
 
     @Test
     @DisplayName("Should have proper command description")
     void testCommandDescription() {
         String description = command.getDescription();
-        assertNotNull(description, "Command description should not be null");
-        assertFalse(description.trim().isEmpty(), "Command description should not be empty");
-        assertTrue(description.contains("countries"), "Description should mention countries");
-        assertTrue(description.contains("population"), "Description should mention population");
+        assertNotNull(description);
+        assertTrue(description.contains("capital"));
     }
 
     @Test
-    @DisplayName("Should handle execute method with mock connection")
-    void testExecuteMethod() throws SQLException {
-        // Setup mock behavior
+    @DisplayName("Should handle execute with valid arguments")
+    void testExecuteWithValidArgs() throws SQLException {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
         when(mockStatement.executeQuery()).thenReturn(mockResultSet);
-        when(mockResultSet.next()).thenReturn(false); // No results
+        when(mockResultSet.next()).thenReturn(false);
 
-        // Test that execute method can be called without throwing exceptions
         assertDoesNotThrow(() -> {
-            command.execute(mockConnection, new String[]{"topcountries", "5"});
-        }, "Execute method should handle arguments gracefully");
+            command.execute(mockConnection, new String[]{"top-capitals", "10"});
+        });
     }
 
     @Test
     @DisplayName("Should handle execute with default arguments")
     void testExecuteWithDefaultArgs() throws SQLException {
-        // Setup mock behavior
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
         when(mockStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
 
         assertDoesNotThrow(() -> {
-            command.execute(mockConnection, new String[]{"topcountries"});
-        }, "Execute method should handle missing count argument");
+            command.execute(mockConnection, new String[]{"top-capitals"});
+        });
     }
 
     @Test
     @DisplayName("Should handle invalid number format")
     void testExecuteWithInvalidNumber() throws SQLException {
-        // Setup mock behavior
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
         when(mockStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
 
         assertDoesNotThrow(() -> {
-            command.execute(mockConnection, new String[]{"topcountries", "invalid"});
-        }, "Execute method should handle invalid number format");
+            command.execute(mockConnection, new String[]{"top-capitals", "invalid"});
+        });
     }
-
 }
