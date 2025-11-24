@@ -40,6 +40,7 @@ public class CommandRegistry {
         registerCommand(new CapitalCitiesByRegionCommand());
         registerCommand(new PopulationByRegionCommand());
         registerCommand(new TopNCitiesByCountryCommand());
+        registerCommand(new ViewPopulationByContinentCommand());
 
     }
 
