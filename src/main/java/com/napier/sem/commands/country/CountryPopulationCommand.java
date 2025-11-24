@@ -31,7 +31,7 @@ import java.sql.SQLException;
 public class CountryPopulationCommand extends CommandBase {
 
     public CountryPopulationCommand() {
-        super("countrypop", "Display the population of a specific country (usage: countrypop <country_name>)");
+        super("country-pop", "Display the population of a specific country (usage: countrypop <country_name>)");
     }
 
     /**

@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class ViewPopulationByDistrictCommand extends CommandBase {
 
     public ViewPopulationByDistrictCommand() {
-        super("districtpop", "View population of a specific district (usage: districtpop <district_name>)");
+        super("district-pop", "View population of a specific district (usage: districtpop <district_name>)");
     }
 
     /**

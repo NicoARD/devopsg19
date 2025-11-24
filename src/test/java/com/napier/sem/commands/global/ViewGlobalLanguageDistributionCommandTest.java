@@ -40,7 +40,7 @@ class ViewGlobalLanguageDistributionCommandTest {
     @Test
     @DisplayName("Should have proper execution command")
     void testExecutionCommand() {
-        assertEquals("languagedist", command.getExcecutionCommand());
+        assertEquals("language-dist", command.getExcecutionCommand());
     }
 
     @Test

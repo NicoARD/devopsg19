@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class PopulationDetailsByCountryCommand extends CommandBase {
 
     public PopulationDetailsByCountryCommand() {
-        super("populationdetailscountry", "Display population details for a specific country (usage: population-details-country <country_name>)");
+        super("population-details-country", "Display population details for a specific country (usage: population-details-country <country_name>)");
     }
 
     /**
