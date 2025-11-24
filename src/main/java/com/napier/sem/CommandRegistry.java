@@ -38,6 +38,8 @@ public class CommandRegistry {
         registerCommand(new TopCapitalCitiesByContinentCommand());
         registerCommand(new PopulationDetailsByCountryCommand());
         registerCommand(new CapitalCitiesByRegionCommand());
+        registerCommand(new PopulationByRegionCommand());
+
 
     }
 

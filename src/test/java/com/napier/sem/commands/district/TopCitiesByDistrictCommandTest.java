@@ -40,7 +40,7 @@ class TopCitiesByDistrictCommandTest {
     @Test
     @DisplayName("Should have proper execution command")
     void testExecutionCommand() {
-        assertEquals("topcities-district", command.getExcecutionCommand());
+        assertEquals("top-cities-district", command.getExcecutionCommand());
     }
 
     @Test

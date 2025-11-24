@@ -40,7 +40,7 @@ class TopCitiesCommandTest {
     @Test
     @DisplayName("Should have proper execution command")
     void testExecutionCommand() {
-        assertEquals("topcities", command.getExcecutionCommand());
+        assertEquals("top-cities", command.getExcecutionCommand());
     }
 
     @Test
@@ -60,7 +60,7 @@ class TopCitiesCommandTest {
         when(mockResultSet.next()).thenReturn(false);
 
         assertDoesNotThrow(() -> {
-            command.execute(mockConnection, new String[]{"topcities", "10"});
+            command.execute(mockConnection, new String[]{"top-cities", "10"});
         });
     }
 
@@ -72,7 +72,7 @@ class TopCitiesCommandTest {
         when(mockResultSet.next()).thenReturn(false);
 
         assertDoesNotThrow(() -> {
-            command.execute(mockConnection, new String[]{"topcities"});
+            command.execute(mockConnection, new String[]{"top-cities"});
         });
     }
 
@@ -84,7 +84,7 @@ class TopCitiesCommandTest {
         when(mockResultSet.next()).thenReturn(false);
 
         assertDoesNotThrow(() -> {
-            command.execute(mockConnection, new String[]{"topcities", "invalid"});
+            command.execute(mockConnection, new String[]{"top-cities", "invalid"});
         });
     }
 }
