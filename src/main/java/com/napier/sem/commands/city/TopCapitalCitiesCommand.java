@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class TopCapitalCitiesCommand extends CommandBase {
 
     public TopCapitalCitiesCommand() {
-        super("topcapitals", "Display the top N populated capital cities in the world (usage: topcapitals <number>)");
+        super("top-capitals", "Display the top N populated capital cities in the world (usage: topcapitals <number>)");
     }
 
     /**

@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class ViewGlobalLanguageDistributionCommand extends CommandBase {
 
     public ViewGlobalLanguageDistributionCommand() {
-        super("languagedist", "Display number and percentage of people speaking Chinese, English, Hindi, Spanish, or Arabic globally.");
+        super("language-dist", "Display number and percentage of people speaking Chinese, English, Hindi, Spanish, or Arabic globally.");
     }
 
     /**
