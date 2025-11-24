@@ -38,4 +38,8 @@ public interface ICommand {
      * @throws SQLException if database operation fails.
      */
     void execute(Connection connection, String[] args) throws SQLException;
+
+    String getName();
+
+    void execute(String[] args);
 }

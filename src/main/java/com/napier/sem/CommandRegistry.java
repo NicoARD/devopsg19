@@ -1,10 +1,12 @@
 package com.napier.sem;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.napier.sem.commands.city.*;
-import com.napier.sem.commands.continent.TopCapitalCitiesByContinentCommand;
+import com.napier.sem.commands.continent.*;
 import com.napier.sem.commands.country.*;
 import com.napier.sem.commands.district.*;
 import com.napier.sem.commands.region.*;
@@ -30,11 +32,10 @@ public class CommandRegistry {
         registerCommand(new TopCapitalCitiesCommand());
         registerCommand(new CountryPopulationCommand());
         registerCommand(new CityPopulationCommand());
-        registerCommand(new AllCitiesCountryCommand());
+        registerCommand(new AllCitiesCountryCommand();
         registerCommand(new TopCitiesByDistrictCommand());
         registerCommand(new TopCapitalCitiesByRegionCommand());
         registerCommand(new TopCapitalCitiesByContinentCommand());
-
 
 
     }
