@@ -39,7 +39,7 @@ public class CommandRegistry {
         registerCommand(new PopulationDetailsByCountryCommand());
         registerCommand(new CapitalCitiesByRegionCommand());
         registerCommand(new PopulationByRegionCommand());
-
+        registerCommand(new TopNCitiesByCountryCommand());
 
     }
 
