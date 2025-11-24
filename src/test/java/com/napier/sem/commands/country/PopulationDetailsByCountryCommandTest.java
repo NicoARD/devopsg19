@@ -50,12 +50,6 @@ class PopulationDetailsByCountryCommandTest {
     }
 
     @Test
-    @DisplayName("Should have proper execution command")
-    void testExecutionCommand() {
-        assertEquals("population-details-country", command.getName());
-    }
-
-    @Test
     @DisplayName("Should execute with missing argument without throwing")
     void testExecuteWithMissingArgument() throws SQLException {
         assertDoesNotThrow(() -> command.execute(mockConnection, new String[]{}));

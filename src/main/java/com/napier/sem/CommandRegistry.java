@@ -32,11 +32,11 @@ public class CommandRegistry {
         registerCommand(new TopCapitalCitiesCommand());
         registerCommand(new CountryPopulationCommand());
         registerCommand(new CityPopulationCommand());
-        registerCommand(new AllCitiesCountryCommand();
+        registerCommand(new AllCitiesCountryCommand());
         registerCommand(new TopCitiesByDistrictCommand());
         registerCommand(new TopCapitalCitiesByRegionCommand());
         registerCommand(new TopCapitalCitiesByContinentCommand());
-
+        registerCommand(new PopulationDetailsByCountryCommand());
 
     }
 
