@@ -40,7 +40,7 @@ class CountryPopulationCommandTest {
     @Test
     @DisplayName("Should have proper execution command")
     void testExecutionCommand() {
-        assertEquals("countrypop", command.getExcecutionCommand());
+        assertEquals("country-pop", command.getExcecutionCommand());
     }
 
     @Test
@@ -59,7 +59,7 @@ class CountryPopulationCommandTest {
         when(mockResultSet.next()).thenReturn(false);
 
         assertDoesNotThrow(() -> {
-            command.execute(mockConnection, new String[]{"countrypop", "China"});
+            command.execute(mockConnection, new String[]{"country-pop", "China"});
         });
     }
 
@@ -67,7 +67,7 @@ class CountryPopulationCommandTest {
     @DisplayName("Should handle execute with missing country")
     void testExecuteWithMissingCountry() {
         assertDoesNotThrow(() -> {
-            command.execute(mockConnection, new String[]{"countrypop"});
+            command.execute(mockConnection, new String[]{"country-pop"});
         });
     }
 
@@ -75,7 +75,7 @@ class CountryPopulationCommandTest {
     @DisplayName("Should handle execute with empty country")
     void testExecuteWithEmptyCountry() {
         assertDoesNotThrow(() -> {
-            command.execute(mockConnection, new String[]{"countrypop", ""});
+            command.execute(mockConnection, new String[]{"country-pop", ""});
         });
     }
 }

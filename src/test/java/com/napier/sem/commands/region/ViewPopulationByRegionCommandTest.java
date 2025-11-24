@@ -40,7 +40,7 @@ class ViewPopulationByRegionCommandTest {
     @Test
     @DisplayName("Should have proper execution command")
     void testExecutionCommand() {
-        assertEquals("regionpop", command.getExcecutionCommand());
+        assertEquals("region-pop", command.getExcecutionCommand());
     }
 
     @Test

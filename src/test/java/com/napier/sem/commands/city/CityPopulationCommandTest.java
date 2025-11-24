@@ -40,7 +40,7 @@ class CityPopulationCommandTest {
     @Test
     @DisplayName("Should have proper execution command")
     void testExecutionCommand() {
-        assertEquals("citypop", command.getExcecutionCommand());
+        assertEquals("city-pop", command.getExcecutionCommand());
     }
 
     @Test
