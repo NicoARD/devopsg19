@@ -1,6 +1,5 @@
-package com.napier.sem.commands;
+package com.napier.sem.commands.region;
 
-import com.napier.sem.commands.region.TopCapitalCitiesByRegionCommand;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
