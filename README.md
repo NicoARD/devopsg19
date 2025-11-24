@@ -1,12 +1,14 @@
 # DevOps Group 19 Project
 
 **Master Branch:** [![Build Status](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml)  
-**Develop Branch:** [![Build Status](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml/badge.svg?branch=develop)](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml)  
-**Code Coverage:** [![Code Coverage](https://coveralls.io/repos/github/NicoARD/devopsg19/badge.svg?branch=master)](https://coveralls.io/github/NicoARD/devopsg19)  
-**Latest Release:** [![Release](https://img.shields.io/github/v/release/NicoARD/devopsg19?include_prereleases)](https://github.com/NicoARD/devopsg19/releases)  
-**License:** [![LICENSE](https://img.shields.io/github/license/NicoARD/devopsg19.svg)](https://github.com/NicoARD/devopsg19/blob/master/LICENSE)
 
----
+**Develop Branch:** [![Build Status](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml/badge.svg?branch=develop)](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml)  
+
+**Code Coverage:** [![Code Coverage](https://coveralls.io/repos/github/NicoARD/devopsg19/badge.svg?branch=master)](https://coveralls.io/github/NicoARD/devopsg19)  
+
+**Latest Release:** [![Release](https://img.shields.io/github/v/release/NicoARD/devopsg19?include_prereleases)](https://github.com/NicoARD/devopsg19/releases)  
+
+**License:** [![LICENSE](https://img.shields.io/github/license/NicoARD/devopsg19.svg)](https://github.com/NicoARD/devopsg19/blob/master/LICENSE)
 
 [PR Validations](https://github.com/NicoARD/devopsg19/actions/workflows/pr-validation.yml)
 
