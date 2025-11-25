@@ -44,9 +44,9 @@ public class AllCountriesCommand extends CommandBase {
                 boolean dataFound = false;
                 
                 System.out.println("\n All Countries in the World (Sorted by Population)");
-                System.out.println("===========================================================================================================");
+                System.out.println("=======================================================================================================================");
                 System.out.printf("%-5s %-45s %-20s %-30s %15s%n", "Code", "Country", "Continent", "Region", "Population");
-                System.out.println("-----------------------------------------------------------------------------------------------------------");
+                System.out.println("-----------------------------------------------------------------------------------------------------------------------");
 
                 while (rs.next()) {
                     dataFound = true;
@@ -64,7 +64,7 @@ public class AllCountriesCommand extends CommandBase {
                     System.out.println("  No countries found in the database.");
                 }
                 
-                System.out.println("===========================================================================================================\n");
+                System.out.println("=======================================================================================================================\n");
             }
         } catch (SQLException e) {
             System.out.println("  Database query failed: " + e.getMessage());
