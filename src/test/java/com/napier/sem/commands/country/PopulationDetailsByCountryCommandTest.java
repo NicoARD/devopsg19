@@ -31,22 +31,7 @@ class PopulationDetailsByCountryCommandTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        command = new PopulationDetailsByCountryCommand() {
-            @Override
-            public String getExcecutionCommand() {
-                return "";
-            }
-
-            @Override
-            public String getDescription() {
-                return "";
-            }
-
-            @Override
-            public void execute(Connection connection, String[] args) throws SQLException {
-
-            }
-        };
+        command = new PopulationDetailsByCountryCommand();
     }
 
     @Test

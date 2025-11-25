@@ -17,8 +17,8 @@ public class ViewPopulationByContinentCommand extends CommandBase {
      */
     public ViewPopulationByContinentCommand() {
         super(
-                "continentpop",
-                "Display total, urban, and rural population of a continent (usage: continentpop <continent>)"
+                "continent-pop",
+                "Display total, urban, and rural population of a continent (usage: continent-pop <continent>)"
         );
     }
 
@@ -35,7 +35,7 @@ public class ViewPopulationByContinentCommand extends CommandBase {
         // INPUT VALIDATION
         // -------------------------
         if (args.length < 2 || args[1].trim().isEmpty()) {
-            System.out.println("  Usage: continentpop <continent>");
+            System.out.println("  Usage: continent-pop <continent>");
             return;
         }
 
