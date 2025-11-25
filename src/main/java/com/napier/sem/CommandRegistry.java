@@ -35,7 +35,6 @@ public class CommandRegistry {
                     try {
                         ICommand command = (ICommand) clazz.getDeclaredConstructor().newInstance();
                         registerCommand(command);
-                        System.out.println("  Registered command: " + command.getExcecutionCommand());
                     } catch (Exception e) {
                         System.err.println("  Failed to instantiate command: " + clazz.getName() + " - " + e.getMessage());
                     }
