@@ -1,0 +1,128 @@
+name: Issue triage
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add needs-triage label if missing
+        uses: actions-ecosystem/action-add-labels@v1
+        if: "!contains(github.event.issue.labels.*.name, 'needs-triage')"
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: needs-triage
+
+      - name: Auto-label by component/report/scope based on issue form content
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const body = context.payload.issue.body || "";
+
+            function add(labels) {
+              return github.rest.issues.addLabels({
+                ...context.repo,
+                issue_number: context.payload.issue.number,
+                labels
+              });
+            }
+
+            const mappings = [
+              { key: "Affected component", map: {
+                "Reporting engine": "component: reporting engine",
+                "SQL queries": "component: sql queries",
+                "Database schema/migrations": "component: db schema",
+                "API": "component: api",
+                "CLI": "component: cli",
+                "UI": "component: ui",
+                "Documentation": "component: docs",
+                "CI/CD": "component: ci"
+              }},
+              { key: "Report type", map: {
+                "Countries": "report: countries",
+                "Cities": "report: cities",
+                "Capital cities": "report: capital cities",
+                "Population totals (by continent/region/country)": "report: population totals",
+                "Languages (Chinese, English, Hindi, Spanish, Arabic)": "report: languages"
+              }},
+              { key: "Report scope", map: {
+                "World": "scope: world",
+                "Continent": "scope: continent",
+                "Region": "scope: region",
+                "Country": "scope: country",
+                "District": "scope: district",
+                "City": "scope: city"
+              }},
+              { key: "Severity", map: {
+                "Critical": "severity: critical",
+                "High": "severity: high",
+                "Medium": "severity: medium",
+                "Low": "severity: low"
+              }}
+            ];
+
+            // Find the selected value for a given markdown header from issue forms
+            function extract(header) {
+              const re = new RegExp(`###\\s+${header}\\s*\\n([\\s\\S]*?)\\n###`, 'm');
+              const reEnd = new RegExp(`###\\s+${header}\\s*\\n([\\s\\S]*)`, 'm');
+              let m = body.match(re) || body.match(reEnd);
+              if (!m) return null;
+              const value = m[1].trim().split('\n')[0].trim();
+              return value;
+            }
+
+            const labelsToAdd = [];
+            for (const m of mappings) {
+              const v = extract(m.key);
+              if (v) {
+                // find first map key that matches start of value (handles "Critical (data loss...)" variants)
+                const key = Object.keys(m.map).find(k => v.startsWith(k));
+                if (key) labelsToAdd.push(m.map[key]);
+              }
+            }
+
+            if (labelsToAdd.length) {
+              await add(labelsToAdd);
+            }
+
+      - name: Auto-assign by component owners
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body || "";
+            function extract(header) {
+              const re = new RegExp(`###\\s+${header}\\s*\\n([\\s\\S]*?)\\n###`, 'm');
+              const reEnd = new RegExp(`###\\s+${header}\\s*\\n([\\s\\S]*)`, 'm');
+              let m = body.match(re) || body.match(reEnd);
+              if (!m) return null;
+              return m[1].trim().split('\n')[0].trim();
+            }
+            const component = extract("Affected component");
+            // Map components to GitHub users or teams
+            const owners = {
+              "Reporting engine": ["@your-team-or-user"],
+              "SQL queries": ["@your-team-or-user"],
+              "Database schema/migrations": ["@your-team-or-user"],
+              "API": ["@your-team-or-user"],
+              "CLI": ["@your-team-or-user"],
+              "UI": ["@your-team-or-user"],
+              "Documentation": ["@your-team-or-user"],
+              "CI/CD": ["@your-team-or-user"]
+            };
+            const assignees = owners[component] || [];
+            if (assignees.length) {
+              await github.rest.issues.addAssignees({
+                ...context.repo,
+                issue_number: issue.number,
+                assignees: assignees.map(a => a.replace(/^@/, "")) // remove @
+              });
+            }

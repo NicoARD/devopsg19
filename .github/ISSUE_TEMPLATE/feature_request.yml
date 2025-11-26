@@ -1,0 +1,61 @@
+name: Feature request
+description: Suggest an enhancement for devopsg19
+title: "[feat]: <short summary>"
+labels:
+  - enhancement
+  - needs-triage
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What’s the user need or pain point? Who benefits?
+      placeholder: "Analysts need to filter Top N city reports by GDP bracket..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the change and any alternatives considered
+      placeholder: "Add parameter gdpBracket to /reports/cities and update SQL accordingly"
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope / Affected reports
+      placeholder: "Countries / Cities / Capital cities / Population totals / Languages"
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0 - Urgent
+        - P1 - High
+        - P2 - Medium
+        - P3 - Low
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Checklist of what must be true to mark this done
+      placeholder: |
+        - [ ] New parameter documented in README
+        - [ ] API returns correct Top N filtered by gdpBracket
+        - [ ] Tests added for 3 sample brackets
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies / Risks
+      placeholder: "Requires DB migration; impacts existing dashboards"
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context / mockups / links

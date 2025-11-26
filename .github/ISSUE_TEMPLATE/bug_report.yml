@@ -1,0 +1,181 @@
+name: Bug report
+description: File a bug report for devopsg19 (population reporting system)
+title: "[bug]: <short summary>"
+labels:
+  - bug
+  - needs-triage
+assignees: []
+body:
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I searched existing issues and Discussions for duplicates
+          required: true
+        - label: I read the README/CONTRIBUTING and applicable docs
+          required: false
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Briefly describe the problem
+      placeholder: Eg. "Top N cities by population in Asia returns incorrect totals"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected component
+      options:
+        - Reporting engine
+        - SQL queries
+        - Database schema/migrations
+        - API
+        - CLI
+        - UI
+        - Documentation
+        - CI/CD
+        - Other/Unsure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: report_type
+    attributes:
+      label: Report type
+      options:
+        - Countries
+        - Cities
+        - Capital cities
+        - Population totals (by continent/region/country)
+        - Languages (Chinese, English, Hindi, Spanish, Arabic)
+        - Other/Unsure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Report scope
+      options:
+        - World
+        - Continent
+        - Region
+        - Country
+        - District
+        - City
+        - N/A
+    validations:
+      required: true
+
+  - type: input
+    id: parameters
+    attributes:
+      label: Input parameters
+      description: Provide parameters used (e.g., N=10, Continent=Asia, Region=Eastern Asia, Country=Japan)
+      placeholder: N=10; Continent=Asia
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Link to the route/command, inputs used, and exact steps
+      placeholder: |
+        1. Run the app @ commit abc123
+        2. Open endpoint /reports/cities?continent=Asia&limit=10
+        3. Observe totals differ from DB
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      description: What did you expect to happen?
+      placeholder: A ranked list of 10 cities in Asia sorted by population (desc)
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: What actually happened (include error messages)?
+      render: text
+      placeholder: Received 8 cities; ordering incorrect; totals mismatch
+
+  - type: textarea
+    id: sql
+    attributes:
+      label: Relevant SQL or query logic (if applicable)
+      description: Provide the SQL you expected or observed
+      render: sql
+      placeholder: |
+        SELECT city.Name, city.Population
+        FROM city JOIN country ON city.CountryCode = country.Code
+        WHERE country.Continent = 'Asia'
+        ORDER BY city.Population DESC
+        LIMIT 10;
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and stack traces
+      description: Paste relevant logs, errors, or screenshots (redact secrets)
+      render: text
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Critical (data loss / production broken)
+        - High (core functionality broken)
+        - Medium (incorrect results / workaround exists)
+        - Low (minor issue / cosmetic)
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: App version / commit SHA
+      placeholder: v1.2.3 or abc1234
+    validations:
+      required: true
+
+  - type: input
+    id: db
+    attributes:
+      label: Database vendor & version
+      placeholder: MySQL 8.0.36 / MariaDB 10.11
+
+  - type: input
+    id: dataset
+    attributes:
+      label: Dataset/schema version
+      placeholder: world.sql (date/hash) / migration #NN
+
+  - type: input
+    id: runtime
+    attributes:
+      label: Runtime / OS
+      placeholder: Java 17 / Node 20 / Python 3.11; Ubuntu 22.04; Docker version
+
+  - type: checkboxes
+    id: regression
+    attributes:
+      label: Regression?
+      options:
+        - label: This worked before (please add last known good commit)
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional context
+      description: Any other info

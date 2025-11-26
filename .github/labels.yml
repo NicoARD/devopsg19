@@ -1,0 +1,108 @@
+labels:
+  # Core types
+  - name: bug
+    color: d73a4a
+    description: Something isn’t working
+  - name: enhancement
+    color: a2eeef
+    description: New feature or request
+  - name: question
+    color: d876e3
+    description: Further information is requested
+  - name: documentation
+    color: 0075ca
+    description: Improvements or additions to documentation
+  - name: ci/cd
+    color: 0e8a16
+    description: CI/CD or workflow related
+  - name: security
+    color: 8b0000
+    description: Security-related issue
+  - name: needs-triage
+    color: fbca04
+    description: Awaiting maintainer triage
+  - name: help wanted
+    color: 008672
+    description: Extra attention is needed
+  - name: good first issue
+    color: 7057ff
+    description: Good for newcomers
+  - name: duplicate
+    color: cfd3d7
+    description: This issue or pull request already exists
+  - name: wontfix
+    color: ffffff
+    description: This will not be worked on
+  - name: invalid
+    color: e4e669
+    description: Not a valid issue
+
+  # Priority
+  - name: priority: P0
+    color: b60205
+    description: Urgent
+  - name: priority: P1
+    color: d93f0b
+  - name: priority: P2
+    color: fbca04
+  - name: priority: P3
+    color: c2e0c6
+
+  # Severity
+  - name: severity: critical
+    color: b60205
+  - name: severity: high
+    color: d93f0b
+  - name: severity: medium
+    color: fbca04
+  - name: severity: low
+    color: c2e0c6
+
+  # Components
+  - name: component: reporting engine
+    color: 1d76db
+  - name: component: sql queries
+    color: 1d76db
+  - name: component: db schema
+    color: 1d76db
+  - name: component: api
+    color: 1d76db
+  - name: component: cli
+    color: 1d76db
+  - name: component: ui
+    color: 1d76db
+  - name: component: docs
+    color: 1d76db
+  - name: component: ci
+    color: 1d76db
+
+  # Report types
+  - name: report: countries
+    color: 0052cc
+  - name: report: cities
+    color: 0052cc
+  - name: report: capital cities
+    color: 0052cc
+  - name: report: population totals
+    color: 0052cc
+  - name: report: languages
+    color: 0052cc
+
+  # Scopes
+  - name: scope: world
+    color: 5319e7
+  - name: scope: continent
+    color: 5319e7
+  - name: scope: region
+    color: 5319e7
+  - name: scope: country
+    color: 5319e7
+  - name: scope: district
+    color: 5319e7
+  - name: scope: city
+    color: 5319e7
+
+  #stale
+  - name: stale
+    color: fef2c0
+    description: Marked as stale due to inactivity
