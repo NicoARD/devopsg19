@@ -38,71 +38,66 @@ labels:
     description: Not a valid issue
 
   # Priority
-  - name: priority: P0
+  - name: priority P0
     color: b60205
     description: Urgent
-  - name: priority: P1
+  - name: priority P1
     color: d93f0b
-  - name: priority: P2
+  - name: priority P2
     color: fbca04
-  - name: priority: P3
+  - name: priority P3
     color: c2e0c6
 
   # Severity
-  - name: severity: critical
+  - name: severity critical
     color: b60205
-  - name: severity: high
+  - name: severity - high
     color: d93f0b
-  - name: severity: medium
+  - name: severity - medium
     color: fbca04
-  - name: severity: low
+  - name: severity - low
     color: c2e0c6
 
   # Components
-  - name: component: reporting engine
+  - name: reporting engine
     color: 1d76db
-  - name: component: sql queries
+  - name: sql queries
     color: 1d76db
-  - name: component: db schema
+  - name: db schema
     color: 1d76db
-  - name: component: api
+  - name: api
     color: 1d76db
-  - name: component: cli
+  - name: cli
     color: 1d76db
-  - name: component: ui
+  - name: ui
     color: 1d76db
-  - name: component: docs
+  - name: docs
     color: 1d76db
-  - name: component: ci
+  - name: ci
     color: 1d76db
 
   # Report types
-  - name: report: countries
+  - name: report - countries
     color: 0052cc
-  - name: report: cities
+  - name: report - cities
     color: 0052cc
-  - name: report: capital cities
+  - name: report - capital cities
     color: 0052cc
-  - name: report: population totals
+  - name: report - population totals
     color: 0052cc
-  - name: report: languages
+  - name: report - languages
     color: 0052cc
 
   # Scopes
-  - name: scope: world
+  - name: scope - world
     color: 5319e7
-  - name: scope: continent
+  - name: scope - continent
     color: 5319e7
-  - name: scope: region
+  - name: scope - region
     color: 5319e7
-  - name: scope: country
+  - name: scope - country
     color: 5319e7
-  - name: scope: district
+  - name: scope - district
     color: 5319e7
-  - name: scope: city
+  - name: scope - city
     color: 5319e7
-
-  #stale
-  - name: stale
-    color: fef2c0
-    description: Marked as stale due to inactivity
