@@ -9,7 +9,18 @@ on:
 permissions:
   contents: read
   issues: write
-  metadata: read
+  deployments: read
+  checks: read
+  pages: read
+  security-events: read
+  repository-projects: read
+  attestations: read
+  discussions: read
+  statuses: read
+  id-token: read
+  packages: read
+  actions: read
+  pull-requests: read
 
 jobs:
   labeler:
