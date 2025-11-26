@@ -5,7 +5,7 @@ Please do not open public issues for security vulnerabilities.
 
 Instead, report via:
 - GitHub Security Advisory: https://github.com/NicoARD/devopsg19/security/advisories
-- Or email the maintainers (replace with your contact): security@example.org
+- Or email the maintainers: security@devopsg19.org
 
 We will acknowledge receipt within 3 business days and provide a timeline for a fix.
 
