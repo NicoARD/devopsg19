@@ -1,0 +1,21 @@
+name: Question
+description: Ask a question or request help
+title: "[question]: <short summary>"
+labels:
+  - question
+  - needs-triage
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: If this is usage help, consider using Discussions (link in the template config).
+      placeholder: "How do I run the report for Top N cities per district?"
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: App version / commit SHA
+      placeholder: v1.2.3 or abc1234
