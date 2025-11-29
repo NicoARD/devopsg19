@@ -1,4 +1,4 @@
-package com.napier.sem.commands.continent;
+package com.napier.sem.commands.region;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -18,9 +18,9 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for TopCitiesByContinentCommand
+ * Unit tests for TopCitiesByRegionCommand
  */
-class TopCitiesByContinentCommandTest {
+class TopCitiesByRegionCommandTest {
 
     @Mock
     private Connection mockConnection;
@@ -31,14 +31,14 @@ class TopCitiesByContinentCommandTest {
     @Mock
     private ResultSet mockResultSet;
 
-    private TopCitiesByContinentCommand command;
+    private TopCitiesByRegionCommand command;
     private ByteArrayOutputStream outputStream;
     private PrintStream originalOut;
 
     @BeforeEach
     void setUp() throws SQLException {
         MockitoAnnotations.openMocks(this);
-        command = new TopCitiesByContinentCommand();
+        command = new TopCitiesByRegionCommand();
 
         // Capture console output
         outputStream = new ByteArrayOutputStream();
@@ -52,7 +52,7 @@ class TopCitiesByContinentCommandTest {
     @Test
     @DisplayName("Should have correct execution command")
     void testGetExcecutionCommand() {
-        assertEquals("top-cities-continent", command.getExcecutionCommand());
+        assertEquals("top-cities-region", command.getExcecutionCommand());
     }
 
     @Test
@@ -60,22 +60,22 @@ class TopCitiesByContinentCommandTest {
     void testGetDescription() {
         assertNotNull(command.getDescription());
         assertTrue(command.getDescription().contains("cities"));
-        assertTrue(command.getDescription().contains("continent"));
+        assertTrue(command.getDescription().contains("region"));
     }
 
     @Test
     @DisplayName("Should handle missing arguments")
-    void testMissingArguments() {
-        assertDoesNotThrow(() -> command.execute(mockConnection, new String[]{"top-cities-continent"}));
+    void testInvalidArgs() {
+        assertDoesNotThrow(() -> command.execute(mockConnection, new String[]{"top-cities-region"}));
         
         String output = outputStream.toString();
         assertTrue(output.contains("Usage"));
     }
 
     @Test
-    @DisplayName("Should handle invalid number input")
-    void testInvalidNumberInput() {
-        assertDoesNotThrow(() -> command.execute(mockConnection, new String[]{"top-cities-continent", "Asia", "abc"}));
+    @DisplayName("Should handle invalid number format")
+    void testInvalidNumber() {
+        assertDoesNotThrow(() -> command.execute(mockConnection, new String[]{"top-cities-region", "Europe", "XYZ"}));
         
         String output = outputStream.toString();
         assertTrue(output.contains("must be a valid integer"));
@@ -84,7 +84,7 @@ class TopCitiesByContinentCommandTest {
     @Test
     @DisplayName("Should handle negative number")
     void testNegativeNumber() {
-        assertDoesNotThrow(() -> command.execute(mockConnection, new String[]{"top-cities-continent", "Europe", "-5"}));
+        assertDoesNotThrow(() -> command.execute(mockConnection, new String[]{"top-cities-region", "Asia", "-5"}));
         
         String output = outputStream.toString();
         assertTrue(output.contains("must be greater than zero"));
@@ -93,7 +93,7 @@ class TopCitiesByContinentCommandTest {
     @Test
     @DisplayName("Should handle zero")
     void testZeroNumber() {
-        assertDoesNotThrow(() -> command.execute(mockConnection, new String[]{"top-cities-continent", "Europe", "0"}));
+        assertDoesNotThrow(() -> command.execute(mockConnection, new String[]{"top-cities-region", "Asia", "0"}));
         
         String output = outputStream.toString();
         assertTrue(output.contains("must be greater than zero"));
@@ -101,23 +101,23 @@ class TopCitiesByContinentCommandTest {
 
     @Test
     @DisplayName("Should execute successfully with valid input")
-    void testValidInput() throws SQLException {
+    void testValidInputDoesNotThrow() throws SQLException {
         when(mockResultSet.next()).thenReturn(true, true, false);
-        when(mockResultSet.getString("CityName")).thenReturn("Mumbai", "Shanghai");
-        when(mockResultSet.getString("Country")).thenReturn("India", "China");
-        when(mockResultSet.getString("District")).thenReturn("Maharashtra", "Shanghai");
-        when(mockResultSet.getLong("Population")).thenReturn(10_500_000L, 9_696_300L);
+        when(mockResultSet.getString("CityName")).thenReturn("Mumbai", "Delhi");
+        when(mockResultSet.getString("Country")).thenReturn("India", "India");
+        when(mockResultSet.getString("District")).thenReturn("Maharashtra", "Delhi");
+        when(mockResultSet.getLong("Population")).thenReturn(10_500_000L, 7_206_704L);
 
-        assertDoesNotThrow(() -> command.execute(mockConnection, new String[]{"top-cities-continent", "Asia", "5"}));
+        assertDoesNotThrow(() -> command.execute(mockConnection, new String[]{"top-cities-region", "Southern and Central Asia", "5"}));
 
-        verify(mockStatement).setString(1, "Asia");
+        verify(mockStatement).setString(1, "Southern and Central Asia");
         verify(mockStatement).setInt(2, 5);
         
         String output = outputStream.toString();
         assertTrue(output.contains("Mumbai"));
-        assertTrue(output.contains("Shanghai"));
+        assertTrue(output.contains("Delhi"));
         assertTrue(output.contains("10,500,000"));
-        assertTrue(output.contains("9,696,300"));
+        assertTrue(output.contains("7,206,704"));
     }
 
     @Test
@@ -125,11 +125,11 @@ class TopCitiesByContinentCommandTest {
     void testNoResults() throws SQLException {
         when(mockResultSet.next()).thenReturn(false);
 
-        assertDoesNotThrow(() -> command.execute(mockConnection, new String[]{"top-cities-continent", "Antarctica", "10"}));
+        assertDoesNotThrow(() -> command.execute(mockConnection, new String[]{"top-cities-region", "UnknownRegion", "10"}));
         
         String output = outputStream.toString();
         assertTrue(output.contains("No results found"));
-        assertTrue(output.contains("Antarctica"));
+        assertTrue(output.contains("UnknownRegion"));
     }
 
     @Test
@@ -137,7 +137,7 @@ class TopCitiesByContinentCommandTest {
     void testDatabaseError() throws SQLException {
         when(mockStatement.executeQuery()).thenThrow(new SQLException("Database error"));
 
-        assertThrows(SQLException.class, () -> command.execute(mockConnection, new String[]{"top-cities-continent", "Europe", "5"}));
+        assertThrows(SQLException.class, () -> command.execute(mockConnection, new String[]{"top-cities-region", "Europe", "5"}));
         
         String output = outputStream.toString();
         assertTrue(output.contains("Database query failed"));
@@ -152,7 +152,7 @@ class TopCitiesByContinentCommandTest {
         when(mockResultSet.getString("District")).thenReturn("Tokyo-to");
         when(mockResultSet.getLong("Population")).thenReturn(7_980_230L);
 
-        command.execute(mockConnection, new String[]{"top-cities-continent", "Asia", "1"});
+        command.execute(mockConnection, new String[]{"top-cities-region", "Eastern Asia", "1"});
         
         String output = outputStream.toString();
         assertTrue(output.contains("Tokyo"));
@@ -168,42 +168,42 @@ class TopCitiesByContinentCommandTest {
             .thenThrow(new SQLException("Connection failed"));
 
         assertThrows(SQLException.class, 
-            () -> command.execute(mockConnection, new String[]{"top-cities-continent", "Africa", "10"}));
+            () -> command.execute(mockConnection, new String[]{"top-cities-region", "Caribbean", "10"}));
     }
 
     @Test
     @DisplayName("Should format populations with commas")
     void testPopulationFormatting() throws SQLException {
         when(mockResultSet.next()).thenReturn(true, false);
-        when(mockResultSet.getString("CityName")).thenReturn("Cairo");
-        when(mockResultSet.getString("Country")).thenReturn("Egypt");
-        when(mockResultSet.getString("District")).thenReturn("Kairo");
-        when(mockResultSet.getLong("Population")).thenReturn(6_789_479L);
+        when(mockResultSet.getString("CityName")).thenReturn("Istanbul");
+        when(mockResultSet.getString("Country")).thenReturn("Turkey");
+        when(mockResultSet.getString("District")).thenReturn("Istanbul");
+        when(mockResultSet.getLong("Population")).thenReturn(8_787_958L);
 
-        command.execute(mockConnection, new String[]{"top-cities-continent", "Africa", "5"});
+        command.execute(mockConnection, new String[]{"top-cities-region", "Middle East", "5"});
         
         String output = outputStream.toString();
-        assertTrue(output.contains("6,789,479"));
+        assertTrue(output.contains("8,787,958"));
     }
 
     @Test
     @DisplayName("Should handle multiple cities correctly")
     void testMultipleCities() throws SQLException {
         when(mockResultSet.next()).thenReturn(true, true, true, false);
-        when(mockResultSet.getString("CityName")).thenReturn("Moscow", "London", "Berlin");
-        when(mockResultSet.getString("Country")).thenReturn("Russia", "United Kingdom", "Germany");
-        when(mockResultSet.getString("District")).thenReturn("Moscow", "England", "Berliini");
-        when(mockResultSet.getLong("Population")).thenReturn(8_389_200L, 7_285_000L, 3_386_667L);
+        when(mockResultSet.getString("CityName")).thenReturn("London", "Birmingham", "Leeds");
+        when(mockResultSet.getString("Country")).thenReturn("United Kingdom", "United Kingdom", "United Kingdom");
+        when(mockResultSet.getString("District")).thenReturn("England", "England", "England");
+        when(mockResultSet.getLong("Population")).thenReturn(7_285_000L, 1_013_000L, 424_194L);
 
-        command.execute(mockConnection, new String[]{"top-cities-continent", "Europe", "3"});
+        command.execute(mockConnection, new String[]{"top-cities-region", "British Islands", "3"});
 
         String output = outputStream.toString();
-        assertTrue(output.contains("Moscow"));
         assertTrue(output.contains("London"));
-        assertTrue(output.contains("Berlin"));
-        assertTrue(output.contains("8,389,200"));
+        assertTrue(output.contains("Birmingham"));
+        assertTrue(output.contains("Leeds"));
         assertTrue(output.contains("7,285,000"));
-        assertTrue(output.contains("3,386,667"));
+        assertTrue(output.contains("1,013,000"));
+        assertTrue(output.contains("424,194"));
     }
 
     @Test
@@ -211,32 +211,47 @@ class TopCitiesByContinentCommandTest {
     void testSQLParameters() throws SQLException {
         when(mockResultSet.next()).thenReturn(false);
 
-        command.execute(mockConnection, new String[]{"top-cities-continent", "South America", "15"});
+        command.execute(mockConnection, new String[]{"top-cities-region", "Western Europe", "20"});
 
-        verify(mockStatement).setString(1, "South America");
-        verify(mockStatement).setInt(2, 15);
+        verify(mockStatement).setString(1, "Western Europe");
+        verify(mockStatement).setInt(2, 20);
     }
 
     @Test
-    @DisplayName("Should handle multi-word continent names")
-    void testMultiWordContinentName() throws SQLException {
+    @DisplayName("Should handle multi-word region names")
+    void testMultiWordRegionName() throws SQLException {
         when(mockResultSet.next()).thenReturn(false);
 
-        command.execute(mockConnection, new String[]{"top-cities-continent", "North", "America", "10"});
+        command.execute(mockConnection, new String[]{"top-cities-region", "Eastern", "Asia", "10"});
 
-        verify(mockStatement).setString(1, "North America");
+        verify(mockStatement).setString(1, "Eastern Asia");
         verify(mockStatement).setInt(2, 10);
     }
 
     @Test
-    @DisplayName("Should handle single word continent names")
-    void testSingleWordContinentName() throws SQLException {
+    @DisplayName("Should handle three-word region names")
+    void testThreeWordRegionName() throws SQLException {
         when(mockResultSet.next()).thenReturn(false);
 
-        command.execute(mockConnection, new String[]{"top-cities-continent", "Europe", "20"});
+        command.execute(mockConnection, new String[]{"top-cities-region", "Southern", "and", "Central", "Asia", "15"});
 
-        verify(mockStatement).setString(1, "Europe");
-        verify(mockStatement).setInt(2, 20);
+        verify(mockStatement).setString(1, "Southern and Central Asia");
+        verify(mockStatement).setInt(2, 15);
+    }
+
+    @Test
+    @DisplayName("Should handle special characters in region names")
+    void testSpecialCharactersInRegion() throws SQLException {
+        when(mockResultSet.next()).thenReturn(true, false);
+        when(mockResultSet.getString("CityName")).thenReturn("São Paulo");
+        when(mockResultSet.getString("Country")).thenReturn("Brazil");
+        when(mockResultSet.getString("District")).thenReturn("São Paulo");
+        when(mockResultSet.getLong("Population")).thenReturn(9_968_485L);
+
+        command.execute(mockConnection, new String[]{"top-cities-region", "South America", "5"});
+        
+        String output = outputStream.toString();
+        assertTrue(output.contains("São Paulo"));
     }
 
     @org.junit.jupiter.api.AfterEach

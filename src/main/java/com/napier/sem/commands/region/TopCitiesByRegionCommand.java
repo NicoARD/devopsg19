@@ -1,4 +1,4 @@
-package com.napier.sem.commands.continent;
+package com.napier.sem.commands.region;
 
 import com.napier.sem.CommandBase;
 
@@ -8,21 +8,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Command to retrieve the top N populated cities in a continent.
- * User Story: As a Data Analyst, I want to view the top N populated cities in a specific continent 
- * so that I can prioritize analysis in that area.
+ * Command to retrieve the top N populated cities in a region.
+ * User Story: As a Data Analyst, I want to view the top N populated cities in a specific region 
+ * so that I can focus on the most significant cities in that region.
  */
-public class TopCitiesByContinentCommand extends CommandBase {
+public class TopCitiesByRegionCommand extends CommandBase {
 
-    public TopCitiesByContinentCommand() {
-        super("top-cities-continent", "Display top N cities in a continent by population (usage: top-cities-continent <continent> <N>)");
+    public TopCitiesByRegionCommand() {
+        super("top-cities-region", "Display top N cities in a region by population (usage: top-cities-region <region> <N>)");
     }
 
     /**
-     * Retrieves and displays the top N most populated cities in a specific continent sorted by population.
+     * Retrieves and displays the top N most populated cities in a specific region sorted by population.
      * 
      * @param connection Database connection
-     * @param args Command arguments where args[1] is the continent name and args[2] is the limit
+     * @param args Command arguments where args[1] is the region name and args[2] is the limit
      * @throws SQLException if database operation fails
      */
     @Override
@@ -31,7 +31,7 @@ public class TopCitiesByContinentCommand extends CommandBase {
         // INPUT VALIDATION
         // -------------------------
         if (args.length < 3) {
-            System.out.println("  Usage: top-cities-continent <continent> <N>");
+            System.out.println("  Usage: top-cities-region <region> <N>");
             return;
         }
 
@@ -49,18 +49,18 @@ public class TopCitiesByContinentCommand extends CommandBase {
             return;
         }
 
-        // Join all arguments between command and limit to support multi-word continents
-        StringBuilder continentBuilder = new StringBuilder();
+        // Join all arguments between command and limit to support multi-word regions
+        StringBuilder regionBuilder = new StringBuilder();
         for (int i = 1; i < args.length - 1; i++) {
             if (i > 1) {
-                continentBuilder.append(" ");
+                regionBuilder.append(" ");
             }
-            continentBuilder.append(args[i]);
+            regionBuilder.append(args[i]);
         }
-        String continent = continentBuilder.toString().trim();
+        String region = regionBuilder.toString().trim();
 
-        if (continent.isEmpty()) {
-            System.out.println("  Invalid input. Continent name cannot be empty.");
+        if (region.isEmpty()) {
+            System.out.println("  Invalid input. Region name cannot be empty.");
             return;
         }
 
@@ -74,18 +74,18 @@ public class TopCitiesByContinentCommand extends CommandBase {
                 "city.Population " +
                 "FROM city " +
                 "JOIN country ON city.CountryCode = country.Code " +
-                "WHERE country.Continent = ? " +
+                "WHERE country.Region = ? " +
                 "ORDER BY city.Population DESC " +
                 "LIMIT ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, continent);
+            stmt.setString(1, region);
             stmt.setInt(2, limit);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 boolean dataFound = false;
 
-                System.out.println("\n Top " + limit + " Cities in " + continent + " by Population");
+                System.out.println("\n Top " + limit + " Cities in " + region + " by Population");
                 System.out.println("==================================================================");
                 System.out.printf("%-35s %-30s %-20s %15s%n", "City", "Country", "District", "Population");
                 System.out.println("------------------------------------------------------------------");
@@ -101,7 +101,7 @@ public class TopCitiesByContinentCommand extends CommandBase {
                 }
 
                 if (!dataFound) {
-                    System.out.println("  No results found for continent: " + continent);
+                    System.out.println("  No results found for region: " + region);
                 }
 
                 System.out.println("==================================================================\n");
