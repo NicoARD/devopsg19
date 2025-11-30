@@ -1,6 +1,7 @@
 package com.napier.sem.commands.region;
 
 import com.napier.sem.CommandBase;
+import com.napier.sem.utils.TableFormatter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -53,11 +54,13 @@ public class ViewPopulationByRegionCommand extends CommandBase {
                     return;
                 }
 
+                String headerFormat = "%-30s %-15s %-15s %-15s%n";
+                
                 System.out.println("Population Details by Region:");
-                System.out.println("==========================================================");
-                System.out.printf("%-30s %-15s %-15s %-15s%n",
+                System.out.println(TableFormatter.generateSeparator(headerFormat));
+                System.out.printf(headerFormat,
                         "Region", "Total", "Urban", "Non-Urban");
-                System.out.println("----------------------------------------------------------");
+                System.out.println(TableFormatter.generateDashedSeparator(headerFormat));
 
                 while (rs.next()) {
                     String regionName = rs.getString("Region");

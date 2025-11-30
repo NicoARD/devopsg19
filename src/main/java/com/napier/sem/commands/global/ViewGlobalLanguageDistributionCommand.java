@@ -1,6 +1,7 @@
 package com.napier.sem.commands.global;
 
 import com.napier.sem.CommandBase;
+import com.napier.sem.utils.TableFormatter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,8 +24,10 @@ public class ViewGlobalLanguageDistributionCommand extends CommandBase {
      */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
+        String headerFormat = "%-12s %-20s %-20s%n";
+        
         System.out.println("\n Global Language Distribution Report");
-        System.out.println("=========================================================");
+        System.out.println(TableFormatter.generateSeparator(headerFormat));
 
         //Validate connection
         if (connection == null || connection.isClosed()) {
@@ -59,8 +62,8 @@ public class ViewGlobalLanguageDistributionCommand extends CommandBase {
         try (PreparedStatement stmt = connection.prepareStatement(languageQuery);
              ResultSet rs = stmt.executeQuery()) {
 
-            System.out.printf("%-12s %-20s %-20s%n", "Language", "Speakers", "% of World Population");
-            System.out.println("---------------------------------------------------------");
+            System.out.printf(headerFormat, "Language", "Speakers", "% of World Population");
+            System.out.println(TableFormatter.generateDashedSeparator(headerFormat));
 
             boolean hasData = false;
 
@@ -81,7 +84,7 @@ public class ViewGlobalLanguageDistributionCommand extends CommandBase {
             System.out.println("Error executing language query: " + e.getMessage());
         }
 
-        System.out.println("=========================================================");
+        System.out.println(TableFormatter.generateSeparator(headerFormat));
         System.out.println("Report complete.\n");
     }
 }

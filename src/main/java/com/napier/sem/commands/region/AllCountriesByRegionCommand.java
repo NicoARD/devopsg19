@@ -1,4 +1,4 @@
-package com.napier.sem.commands.country;
+package com.napier.sem.commands.region;
 
 import com.napier.sem.CommandBase;
 import com.napier.sem.utils.TableFormatter;
@@ -9,26 +9,47 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Command to retrieve all countries in the world sorted by population.
- * User Story: As a Data Analyst, I want to view all countries in the world 
- * sorted by largest population to smallest so that I can analyze global population distribution.
+ * Command to retrieve all countries in a specific region sorted by population.
+ * User Story: As a Data Analyst, I want to view all countries in a specific region 
+ * sorted by largest population to smallest, so that I can compare populations within a region.
  */
-public class AllCountriesCommand extends CommandBase {
+public class AllCountriesByRegionCommand extends CommandBase {
 
-    public AllCountriesCommand() {
-        super("all-countries", "Display all countries in the world sorted by population (usage: all-countries)");
+    public AllCountriesByRegionCommand() {
+        super("all-countries-region", "Display all countries in a region sorted by population (usage: all-countries-region <region>)");
     }
 
     /**
-     * Retrieves and displays all countries in the world sorted by population (largest to smallest).
+     * Retrieves and displays all countries in a specific region sorted by population (largest to smallest).
      * 
      * @param connection Database connection
-     * @param args Command arguments (no additional arguments required)
+     * @param args Command arguments where args[1+] is the region name
      * @throws SQLException if database operation fails
      */
     @Override
     public void execute(Connection connection, String[] args) throws SQLException {
-        // ---- SQL Query ----
+        // ---- Input Validation ----
+        if (args.length < 2) {
+            System.out.println("  Please provide a region name. Usage: all-countries-region <region>");
+            return;
+        }
+
+        // Join all arguments after the command name to support multi-word regions
+        StringBuilder regionBuilder = new StringBuilder();
+        for (int i = 1; i < args.length; i++) {
+            if (i > 1) {
+                regionBuilder.append(" ");
+            }
+            regionBuilder.append(args[i]);
+        }
+        String regionName = regionBuilder.toString().trim();
+
+        if (regionName.isEmpty()) {
+            System.out.println("  Invalid input. Region name cannot be empty.");
+            return;
+        }
+
+        // ---- SQL Query with Region Parameter ----
         String sql = "SELECT " +
                 "Code, " +
                 "Name, " +
@@ -37,16 +58,19 @@ public class AllCountriesCommand extends CommandBase {
                 "Population, " +
                 "Capital " +
                 "FROM country " +
+                "WHERE Region = ? " +
                 "ORDER BY Population DESC";
 
         // ---- Execute Query with Error Handling ----
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, regionName);
+
             try (ResultSet rs = stmt.executeQuery()) {
                 boolean dataFound = false;
                 
                 String headerFormat = "%-5s %-45s %-20s %-30s %15s%n";
                 
-                System.out.println("\n All Countries in the World (Sorted by Population)");
+                System.out.println("\n All Countries in " + regionName + " (Sorted by Population)");
                 System.out.println(TableFormatter.generateSeparator(headerFormat));
                 System.out.printf(headerFormat, "Code", "Country", "Continent", "Region", "Population");
                 System.out.println(TableFormatter.generateDashedSeparator(headerFormat));
@@ -64,10 +88,11 @@ public class AllCountriesCommand extends CommandBase {
                 }
 
                 if (!dataFound) {
-                    System.out.println("  No countries found in the database.");
+                    System.out.println("  No countries found for region: " + regionName);
+                    System.out.println("  Please check the region name and try again.");
                 }
                 
-                System.out.println("=======================================================================================================================\n");
+                System.out.println(TableFormatter.generateSeparator(headerFormat) + "\n");
             }
         } catch (SQLException e) {
             System.out.println("  Database query failed: " + e.getMessage());

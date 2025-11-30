@@ -1,6 +1,7 @@
 package com.napier.sem.commands.region;
 
 import com.napier.sem.CommandBase;
+import com.napier.sem.utils.TableFormatter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -85,11 +86,14 @@ public class PopulationByRegionCommand extends CommandBase {
                 long nonUrban = total - urban;
 
                 // ---- Display Results ----
+                String format = "%46s%n";
+                
                 System.out.println("\n Population Report for Region: " + regionName);
-                System.out.println("==============================================");
+                System.out.println(TableFormatter.generateSeparator(format));
                 System.out.printf("Total Population:        %,d%n", total);
                 System.out.printf("Urban Population:        %,d%n", urban);
                 System.out.printf("Non-Urban Population:    %,d%n", nonUrban);
+                System.out.println(TableFormatter.generateSeparator(format));
             }
 
         } catch (SQLException e) {
