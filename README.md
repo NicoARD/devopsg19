@@ -14,5 +14,45 @@
 
 A Java application for database operations with comprehensive CI/CD pipeline automation using GitHub Actions.
 
+# Requirements Table
+
+## 32 of 32 requiremnts have been met, which is 100% 
+
+| ID    | Name | Met | Screenshot |
+|-------|-------|------|------------|
+| sc-43 | All the countries in the world organised by largest population to smallest. | Yes | ![](#) |
+| sc-44 | All the countries in a continent organised by largest population to smallest. | Yes | ![](#) |
+| sc-45 | All the countries in a region organised by largest population to smallest. | Yes | ![](#) |
+| sc-46 | The top N populated countries in the world where N is provided by the user. | Yes | ![](#) |
+| sc-47 | The top N populated countries in a continent where N is provided by the user. | Yes | ![](#) |
+| sc-48 | The top N populated countries in a region where N is provided by the user. | Yes | ![](#) |
+| sc-49 | All the cities in the world organised by largest population to smallest. | Yes | ![](#) |
+| sc-50 | All the cities in a continent organised by largest population to smallest. | Yes | ![](#) |
+| sc-51 | All the cities in a region organised by largest population to smallest. | Yes | ![](#) |
+| sc-52 | All the cities in a country organised by largest population to smallest. | Yes | ![](#) |
+| sc-53 | All the cities in a district organised by largest population to smallest. | Yes | ![](#) |
+| sc-54 | The top N populated cities in the world where N is provided by the user. | Yes | ![](#) |
+| sc-55 | The top N populated cities in a continent where N is provided by the user. | Yes | ![](#) |
+| sc-56 | The top N populated cities in a region where N is provided by the user. | Yes | ![](#) |
+| sc-57 | The top N populated cities in a country where N is provided by the user. | Yes | ![](#) |
+| sc-58 | The top N populated cities in a district where N is provided by the user. | Yes | ![](#) |
+| sc-59 | All the capital cities in the world organised by largest population to smallest. | Yes | ![](#) |
+| sc-60 | All the capital cities in a continent organised by largest population to smallest. | Yes | ![](#) |
+| sc-61 | All the capital cities in a region organised by largest population to smallest. | Yes | ![](#) |
+| s-62  | The top N populated capital cities in the world where N is provided by the user. | Yes | ![](#) |
+| s-63  | The top N populated capital cities in a continent where N is provided by the user. | Yes | ![](#) |
+| sc-64 | The top N populated capital cities in a region where N is provided by the user. | Yes | ![](#) |
+| sc-67 | The population of people, people living in cities, and people not living in cities in each continent. | Yes | ![](#) |
+| sc-68 | The population of people, people living in cities, and people not living in cities in each region. | Yes | ![](#) |
+| sc-69 | The population of people, people living in cities, and people not living in cities in each country. | Yes | ![](#) |
+| sc-70 | The population of the world. | Yes | ![](#) |
+| sc-71 | The population of a continent. | Yes | ![](#) |
+| sc-72 | The population of a region. | Yes | ![](#) |
+| sc-73 | The population of a country. | Yes | ![](#) |
+| sc-74 | The population of a district. | Yes | ![](#) |
+| sc-75 | The population of a city. | Yes | ![](#) |
+| sc-76 | Provide the number of people who speak the following languages from greatest number to smallest, including the percentage of the world population. | Yes | ![](#) |
+
+
 
 
