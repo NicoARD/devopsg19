@@ -78,7 +78,7 @@ jobs:
       run: mvn test
       
     - name: Run integration tests
-      run: mvn verify -DskipUnitTests
+      run: mvn verify
       
     - name: Package JAR
       run: mvn package

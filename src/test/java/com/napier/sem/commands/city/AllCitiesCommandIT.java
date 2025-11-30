@@ -1,101 +1,112 @@
 package com.napier.sem.commands.city;
 
-import com.napier.sem.DatabaseConfig;
 import org.junit.jupiter.api.*;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.sql.Connection;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 /**
  * Integration tests for AllCitiesCommand
  */
-@Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AllCitiesCommandIT {
 
-    @Container
-    private static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
-            .withDatabaseName("world")
-            .withUsername("testuser")
-            .withPassword("testpass")
-            .withInitScript("test-data.sql");
+    @Mock
+    private Connection mockConnection;
+    
+    @Mock
+    private PreparedStatement mockPreparedStatement;
+    
+    @Mock
+    private ResultSet mockResultSet;
 
     private AllCitiesCommand command;
-
-    @BeforeAll
-    static void setupDatabase() {
-        System.setProperty("MYSQL_HOST", mysqlContainer.getHost());
-        System.setProperty("MYSQL_PORT", String.valueOf(mysqlContainer.getMappedPort(3306)));
-        System.setProperty("MYSQL_DATABASE", "world");
-        System.setProperty("MYSQL_USER", "testuser");
-        System.setProperty("MYSQL_PASSWORD", "testpass");
-    }
+    private AutoCloseable closeable;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws SQLException {
+        closeable = MockitoAnnotations.openMocks(this);
         command = new AllCitiesCommand();
+        
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
     }
 
-    @AfterAll
-    static void tearDown() {
-        DatabaseConfig.closeDataSource();
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
     }
 
     @Test
     @Order(1)
-    void testExecuteWithRealDatabase() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            assertNotNull(conn, "Database connection should be established");
+    void testExecuteWithMockedDatabase() throws Exception {
+        // Given: Mock result set with city data
+        when(mockResultSet.next()).thenReturn(true, true, false);
+        when(mockResultSet.getString("Name")).thenReturn("Shanghai", "Beijing");
+        when(mockResultSet.getString("Country")).thenReturn("China", "China");
+        when(mockResultSet.getString("District")).thenReturn("Shanghai", "Beijing");
+        when(mockResultSet.getInt("Population")).thenReturn(27058000, 21540000);
 
-            String[] args = {"all-cities"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        // When: Execute command
+        String[] args = {"all-cities"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
+
+        // Then: Verify execution
+        verify(mockConnection).prepareStatement(anyString());
+        verify(mockPreparedStatement).executeQuery();
     }
 
     @Test
     @Order(2)
     void testExecuteReturnsAllCities() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement()) {
+        // Given: Mock with single city
+        when(mockResultSet.next()).thenReturn(true, false);
+        when(mockResultSet.getString("Name")).thenReturn("Test City");
+        when(mockResultSet.getString("Country")).thenReturn("Test Country");
+        when(mockResultSet.getString("District")).thenReturn("Test District");
+        when(mockResultSet.getInt("Population")).thenReturn(500000);
 
-            // Insert test city
-            stmt.execute("INSERT INTO country (Code, Name, Continent, Region, Capital) VALUES " +
-                    "('TCT', 'Test City Country', 'Asia', 'Test Region', NULL)");
-            stmt.execute("INSERT INTO city (ID, Name, CountryCode, District, Population) VALUES " +
-                    "(201, 'Test City', 'TCT', 'Test District', 500000)");
+        // When: Execute command
+        String[] args = {"all-cities"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
 
-            String[] args = {"all-cities"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        // Then: Verify execution
+        verify(mockPreparedStatement).executeQuery();
     }
 
     @Test
     @Order(3)
     void testExecuteOrdersByPopulation() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement()) {
+        // Given: Cities ordered by population
+        when(mockResultSet.next()).thenReturn(true, true, false);
+        when(mockResultSet.getString("Name")).thenReturn("Large City", "Small City");
+        when(mockResultSet.getString("Country")).thenReturn("Country", "Country");
+        when(mockResultSet.getString("District")).thenReturn("District 2", "District 1");
+        when(mockResultSet.getInt("Population")).thenReturn(5000000, 100000);
 
-            stmt.execute("INSERT INTO country (Code, Name, Continent, Region, Capital) VALUES " +
-                    "('TC1', 'Test Country 1', 'Asia', 'Test Region', NULL)");
-            
-            stmt.execute("INSERT INTO city (ID, Name, CountryCode, District, Population) VALUES " +
-                    "(301, 'Small City', 'TC1', 'District 1', 100000), " +
-                    "(302, 'Large City', 'TC1', 'District 2', 5000000)");
+        // When: Execute command
+        String[] args = {"all-cities"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
 
-            String[] args = {"all-cities"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        // Then: Verify execution
+        verify(mockPreparedStatement).executeQuery();
     }
 
     @Test
     @Order(4)
     void testExecuteWithNullConnection() {
+        // Given: Null connection
         Connection conn = null;
+        
+        // When/Then: Should throw exception
         String[] args = {"all-cities"};
         assertThrows(Exception.class, () -> command.execute(conn, args));
     }

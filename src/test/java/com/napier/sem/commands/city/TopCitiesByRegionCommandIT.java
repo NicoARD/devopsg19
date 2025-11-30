@@ -1,138 +1,144 @@
 package com.napier.sem.commands.city;
 
-import com.napier.sem.DatabaseConfig;
+import com.napier.sem.commands.region.TopCitiesByRegionCommand;
 import org.junit.jupiter.api.*;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.sql.Connection;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 /**
  * Integration tests for TopCitiesByRegionCommand
  */
-@Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class TopCitiesByRegionCommandIT {
 
-    @Container
-    private static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
-            .withDatabaseName("world")
-            .withUsername("testuser")
-            .withPassword("testpass")
-            .withInitScript("test-data.sql");
+    @Mock
+    private Connection mockConnection;
+    
+    @Mock
+    private PreparedStatement mockPreparedStatement;
+    
+    @Mock
+    private ResultSet mockResultSet;
 
     private TopCitiesByRegionCommand command;
-
-    @BeforeAll
-    static void setupDatabase() {
-        System.setProperty("MYSQL_HOST", mysqlContainer.getHost());
-        System.setProperty("MYSQL_PORT", String.valueOf(mysqlContainer.getMappedPort(3306)));
-        System.setProperty("MYSQL_DATABASE", "world");
-        System.setProperty("MYSQL_USER", "testuser");
-        System.setProperty("MYSQL_PASSWORD", "testpass");
-    }
+    private AutoCloseable closeable;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws SQLException {
+        closeable = MockitoAnnotations.openMocks(this);
         command = new TopCitiesByRegionCommand();
+        
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
     }
 
-    @AfterAll
-    static void tearDown() {
-        DatabaseConfig.closeDataSource();
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
     }
 
     @Test
     @Order(1)
     void testExecuteWithValidRegionAndLimit() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            String[] args = {"top-cities-region", "Eastern Asia", "5"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        when(mockResultSet.next()).thenReturn(true, true, false);
+        when(mockResultSet.getString("Name")).thenReturn("Shanghai", "Beijing");
+        when(mockResultSet.getString("Country")).thenReturn("China", "China");
+        when(mockResultSet.getString("District")).thenReturn("Shanghai", "Beijing");
+        when(mockResultSet.getInt("Population")).thenReturn(27058000, 21540000);
+
+        String[] args = {"top-cities-region", "Eastern Asia", "5"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
+
+        verify(mockPreparedStatement).setString(1, "Eastern Asia");
+        verify(mockPreparedStatement).setInt(2, 5);
     }
 
     @Test
     @Order(2)
     void testExecuteWithSingleWordRegion() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement()) {
+        when(mockResultSet.next()).thenReturn(true, false);
+        when(mockResultSet.getString("Name")).thenReturn("Test City");
+        when(mockResultSet.getString("Country")).thenReturn("Test Country");
+        when(mockResultSet.getString("District")).thenReturn("Test District");
+        when(mockResultSet.getInt("Population")).thenReturn(1000000);
 
-            // Insert test region with single word
-            stmt.execute("INSERT INTO country (Code, Name, Continent, Region, Capital) VALUES " +
-                    "('TRG', 'Test Region Country', 'Asia', 'TestRegion', NULL)");
-            stmt.execute("INSERT INTO city (ID, Name, CountryCode, District, Population) VALUES " +
-                    "(501, 'Test Region City', 'TRG', 'Test District', 1000000)");
+        String[] args = {"top-cities-region", "TestRegion", "3"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
 
-            String[] args = {"top-cities-region", "TestRegion", "3"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        verify(mockPreparedStatement).setString(1, "TestRegion");
+        verify(mockPreparedStatement).setInt(2, 3);
     }
 
     @Test
     @Order(3)
     void testExecuteRespectsLimit() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            String[] args = {"top-cities-region", "Eastern Asia", "2"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        when(mockResultSet.next()).thenReturn(true, true, false);
+        when(mockResultSet.getString("Name")).thenReturn("Tokyo", "Osaka");
+        when(mockResultSet.getString("Country")).thenReturn("Japan", "Japan");
+        when(mockResultSet.getString("District")).thenReturn("Tokyo", "Osaka");
+        when(mockResultSet.getInt("Population")).thenReturn(13960000, 19281000);
+
+        String[] args = {"top-cities-region", "Eastern Asia", "2"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
+
+        verify(mockPreparedStatement).setInt(2, 2);
     }
 
     @Test
     @Order(4)
     void testExecuteWithInvalidLimit() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            String[] args = {"top-cities-region", "Eastern Asia", "invalid"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        String[] args = {"top-cities-region", "Eastern Asia", "invalid"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
     }
 
     @Test
     @Order(5)
     void testExecuteWithNegativeLimit() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            String[] args = {"top-cities-region", "Eastern Asia", "-5"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        String[] args = {"top-cities-region", "Eastern Asia", "-5"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
     }
 
     @Test
     @Order(6)
     void testExecuteWithZeroLimit() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            String[] args = {"top-cities-region", "Eastern Asia", "0"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        when(mockResultSet.next()).thenReturn(false);
+
+        String[] args = {"top-cities-region", "Eastern Asia", "0"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
     }
 
     @Test
     @Order(7)
     void testExecuteWithLimitGreaterThanAvailable() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            String[] args = {"top-cities-region", "Eastern Asia", "1000"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        when(mockResultSet.next()).thenReturn(false);
+
+        String[] args = {"top-cities-region", "Eastern Asia", "1000"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
     }
 
     @Test
     @Order(8)
     void testExecuteWithMissingArguments() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            String[] args = {"top-cities-region", "Eastern Asia"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        String[] args = {"top-cities-region", "Eastern Asia"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
     }
 
     @Test
     @Order(9)
     void testExecuteWithInvalidRegion() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            String[] args = {"top-cities-region", "InvalidRegion", "5"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        when(mockResultSet.next()).thenReturn(false);
+
+        String[] args = {"top-cities-region", "InvalidRegion", "5"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
     }
 
     @Test

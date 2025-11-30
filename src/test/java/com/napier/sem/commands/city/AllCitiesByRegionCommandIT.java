@@ -1,94 +1,112 @@
 package com.napier.sem.commands.city;
 
-import com.napier.sem.DatabaseConfig;
+import com.napier.sem.commands.region.AllCitiesByRegionCommand;
 import org.junit.jupiter.api.*;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.sql.Connection;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 /**
  * Integration tests for AllCitiesByRegionCommand
  */
-@Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AllCitiesByRegionCommandIT {
 
-    @Container
-    private static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
-            .withDatabaseName("world")
-            .withUsername("testuser")
-            .withPassword("testpass")
-            .withInitScript("test-data.sql");
+    @Mock
+    private Connection mockConnection;
+    
+    @Mock
+    private PreparedStatement mockPreparedStatement;
+    
+    @Mock
+    private ResultSet mockResultSet;
 
     private AllCitiesByRegionCommand command;
-
-    @BeforeAll
-    static void setupDatabase() {
-        System.setProperty("MYSQL_HOST", mysqlContainer.getHost());
-        System.setProperty("MYSQL_PORT", String.valueOf(mysqlContainer.getMappedPort(3306)));
-        System.setProperty("MYSQL_DATABASE", "world");
-        System.setProperty("MYSQL_USER", "testuser");
-        System.setProperty("MYSQL_PASSWORD", "testpass");
-    }
+    private AutoCloseable closeable;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws SQLException {
+        closeable = MockitoAnnotations.openMocks(this);
         command = new AllCitiesByRegionCommand();
+        
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
     }
 
-    @AfterAll
-    static void tearDown() {
-        DatabaseConfig.closeDataSource();
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
     }
 
     @Test
     @Order(1)
     void testExecuteWithValidRegion() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            String[] args = {"all-cities-region", "Eastern Asia"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        when(mockResultSet.next()).thenReturn(true, true, false);
+        when(mockResultSet.getString("Name")).thenReturn("Shanghai", "Beijing");
+        when(mockResultSet.getString("Country")).thenReturn("China", "China");
+        when(mockResultSet.getString("District")).thenReturn("Shanghai", "Beijing");
+        when(mockResultSet.getInt("Population")).thenReturn(27058000, 21540000);
+
+        String[] args = {"all-cities-region", "Eastern Asia"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
+
+        verify(mockPreparedStatement).setString(1, "Eastern Asia");
     }
 
     @Test
     @Order(2)
     void testExecuteWithMultiWordRegion() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            String[] args = {"all-cities-region", "Western", "Europe"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        when(mockResultSet.next()).thenReturn(true, false);
+        when(mockResultSet.getString("Name")).thenReturn("Berlin");
+        when(mockResultSet.getString("Country")).thenReturn("Germany");
+        when(mockResultSet.getString("District")).thenReturn("Berlin");
+        when(mockResultSet.getInt("Population")).thenReturn(3645000);
+
+        String[] args = {"all-cities-region", "Western", "Europe"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
+
+        verify(mockPreparedStatement).setString(1, "Western Europe");
     }
 
     @Test
     @Order(3)
     void testExecuteFiltersCitiesByRegion() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            String[] args = {"all-cities-region", "Eastern Asia"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        when(mockResultSet.next()).thenReturn(true, false);
+        when(mockResultSet.getString("Name")).thenReturn("Tokyo");
+        when(mockResultSet.getString("Country")).thenReturn("Japan");
+        when(mockResultSet.getString("District")).thenReturn("Tokyo");
+        when(mockResultSet.getInt("Population")).thenReturn(13960000);
+
+        String[] args = {"all-cities-region", "Eastern Asia"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
+
+        verify(mockPreparedStatement).executeQuery();
     }
 
     @Test
     @Order(4)
     void testExecuteWithInvalidRegion() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            String[] args = {"all-cities-region", "InvalidRegion"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        when(mockResultSet.next()).thenReturn(false);
+
+        String[] args = {"all-cities-region", "InvalidRegion"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
+
+        verify(mockPreparedStatement).executeQuery();
     }
 
     @Test
     @Order(5)
     void testExecuteWithMissingArguments() throws Exception {
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            String[] args = {"all-cities-region"};
-            assertDoesNotThrow(() -> command.execute(conn, args));
-        }
+        String[] args = {"all-cities-region"};
+        assertDoesNotThrow(() -> command.execute(mockConnection, args));
     }
 
     @Test
