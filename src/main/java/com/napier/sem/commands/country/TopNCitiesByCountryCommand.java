@@ -1,6 +1,7 @@
 package com.napier.sem.commands.country;
 
 import com.napier.sem.CommandBase;
+import com.napier.sem.utils.TableFormatter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,8 +22,8 @@ public class TopNCitiesByCountryCommand extends CommandBase {
 
     public TopNCitiesByCountryCommand() {
         super(
-                "topcities-country",
-                "Displays the top N cities in a specific country ordered by population (usage: topcities-country <country_name> <N>)"
+                "top-cities-country",
+                "Displays the top N cities in a specific country ordered by population (usage: top-cities-country <country_name> <N>)"
         );
     }
 
@@ -60,15 +61,14 @@ public class TopNCitiesByCountryCommand extends CommandBase {
         }
 
         // ---- SQL Query ----
-        String sql = """
-                SELECT Name, Population
-                FROM city
-                WHERE Country = ?
-                ORDER BY Population DESC
-                LIMIT ?
-                """;
-
-        // ---- Execute Query ----
+            String sql = """
+                    SELECT city.Name, city.Population
+                    FROM city
+                    JOIN country ON city.CountryCode = country.Code
+                    WHERE country.Name = ?
+                    ORDER BY city.Population DESC
+                    LIMIT ?
+                    """;        // ---- Execute Query ----
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, countryName);
             stmt.setInt(2, n);
@@ -80,12 +80,18 @@ public class TopNCitiesByCountryCommand extends CommandBase {
                     return;
                 }
 
-                System.out.printf("\nTop %d Cities in Country: %s%n", n, countryName);
-                System.out.println("==============================================");
+                // Print header
+                String headerFormat = "%-30s %15s%n";
+                System.out.println("\n" + TableFormatter.generateSeparator(headerFormat));
+                System.out.printf("Top %d Cities in Country: %s%n", n, countryName);
+                System.out.println(TableFormatter.generateSeparator(headerFormat));
+                System.out.printf(headerFormat, "City", "Population");
+                System.out.println(TableFormatter.generateDashedSeparator(headerFormat));
+                
                 while (rs.next()) {
                     String cityName = rs.getString("Name");
                     int population = rs.getInt("Population");
-                    System.out.printf("%s: %,d%n", cityName, population);
+                    System.out.printf(headerFormat, cityName, String.format("%,d", population));
                 }
             }
 
