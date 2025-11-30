@@ -1,6 +1,7 @@
 package com.napier.sem.commands.continent;
 
 import com.napier.sem.CommandBase;
+import com.napier.sem.utils.TableFormatter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -62,12 +63,14 @@ public class ViewPopulationByContinentCommand extends CommandBase {
                     long urban = rs.getLong("UrbanPopulation");
                     long rural = rs.getLong("RuralPopulation");
 
+                    String format = "%49s%n";
+                    
                     System.out.println("\nPopulation statistics for continent: " + continent);
-                    System.out.println("=================================================");
+                    System.out.println(TableFormatter.generateSeparator(format));
                     System.out.printf("Total population : %,d%n", total);
                     System.out.printf("Urban population : %,d%n", urban);
                     System.out.printf("Rural population : %,d%n", rural);
-                    System.out.println("=================================================\n");
+                    System.out.println(TableFormatter.generateSeparator(format) + "\n");
                 } else {
                     System.out.println("  No results found for continent: " + continent);
                 }

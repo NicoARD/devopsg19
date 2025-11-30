@@ -1,6 +1,7 @@
 package com.napier.sem.commands.world;
 
 import com.napier.sem.CommandBase;
+import com.napier.sem.utils.TableFormatter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,10 +37,12 @@ public class TotalWorldPopulationCommand extends CommandBase {
                 if (rs.next()) {
                     long totalPopulation = rs.getLong("TotalPopulation");
                     
+                    String format = "%40s%n";
+                    
                     System.out.println("\n Total World Population");
-                    System.out.println("========================================");
+                    System.out.println(TableFormatter.generateSeparator(format));
                     System.out.printf("  %,d%n", totalPopulation);
-                    System.out.println("========================================\n");
+                    System.out.println(TableFormatter.generateSeparator(format) + "\n");
                 } else {
                     System.out.println("  No population data found.");
                 }

@@ -1,6 +1,7 @@
 package com.napier.sem.commands.continent;
 
 import com.napier.sem.CommandBase;
+import com.napier.sem.utils.TableFormatter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -85,10 +86,12 @@ public class TopCitiesByContinentCommand extends CommandBase {
             try (ResultSet rs = stmt.executeQuery()) {
                 boolean dataFound = false;
 
+                String headerFormat = "%-35s %-30s %-20s %15s%n";
+
                 System.out.println("\n Top " + limit + " Cities in " + continent + " by Population");
-                System.out.println("==================================================================");
-                System.out.printf("%-35s %-30s %-20s %15s%n", "City", "Country", "District", "Population");
-                System.out.println("------------------------------------------------------------------");
+                System.out.println(TableFormatter.generateSeparator(headerFormat));
+                System.out.printf(headerFormat, "City", "Country", "District", "Population");
+                System.out.println(TableFormatter.generateDashedSeparator(headerFormat));
 
                 while (rs.next()) {
                     dataFound = true;
@@ -104,7 +107,7 @@ public class TopCitiesByContinentCommand extends CommandBase {
                     System.out.println("  No results found for continent: " + continent);
                 }
 
-                System.out.println("==================================================================\n");
+                System.out.println(TableFormatter.generateSeparator(headerFormat) + "\n");
             }
         } catch (SQLException e) {
             System.out.println("  Database query failed: " + e.getMessage());

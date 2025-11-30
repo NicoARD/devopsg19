@@ -1,6 +1,7 @@
 package com.napier.sem.commands.country;
 
 import com.napier.sem.CommandBase;
+import com.napier.sem.utils.TableFormatter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -43,10 +44,12 @@ public class AllCountriesCommand extends CommandBase {
             try (ResultSet rs = stmt.executeQuery()) {
                 boolean dataFound = false;
                 
+                String headerFormat = "%-5s %-45s %-20s %-30s %15s%n";
+                
                 System.out.println("\n All Countries in the World (Sorted by Population)");
-                System.out.println("=======================================================================================================================");
-                System.out.printf("%-5s %-45s %-20s %-30s %15s%n", "Code", "Country", "Continent", "Region", "Population");
-                System.out.println("-----------------------------------------------------------------------------------------------------------------------");
+                System.out.println(TableFormatter.generateSeparator(headerFormat));
+                System.out.printf(headerFormat, "Code", "Country", "Continent", "Region", "Population");
+                System.out.println(TableFormatter.generateDashedSeparator(headerFormat));
 
                 while (rs.next()) {
                     dataFound = true;

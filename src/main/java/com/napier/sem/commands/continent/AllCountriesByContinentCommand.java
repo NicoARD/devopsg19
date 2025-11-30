@@ -1,6 +1,7 @@
 package com.napier.sem.commands.continent;
 
 import com.napier.sem.CommandBase;
+import com.napier.sem.utils.TableFormatter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -67,10 +68,12 @@ public class AllCountriesByContinentCommand extends CommandBase {
             try (ResultSet rs = stmt.executeQuery()) {
                 boolean dataFound = false;
                 
+                String headerFormat = "%-5s %-45s %-20s %-30s %15s%n";
+                
                 System.out.println("\n All Countries in " + continentName + " (Sorted by Population)");
-                System.out.println("=======================================================================================================================");
-                System.out.printf("%-5s %-45s %-20s %-30s %15s%n", "Code", "Country", "Continent", "Region", "Population");
-                System.out.println("-----------------------------------------------------------------------------------------------------------------------");
+                System.out.println(TableFormatter.generateSeparator(headerFormat));
+                System.out.printf(headerFormat, "Code", "Country", "Continent", "Region", "Population");
+                System.out.println(TableFormatter.generateDashedSeparator(headerFormat));
 
                 while (rs.next()) {
                     dataFound = true;
@@ -89,7 +92,7 @@ public class AllCountriesByContinentCommand extends CommandBase {
                     System.out.println("  Please check the continent name and try again.");
                 }
                 
-                System.out.println("=======================================================================================================================\n");
+                System.out.println(TableFormatter.generateSeparator(headerFormat) + "\n");
             }
         } catch (SQLException e) {
             System.out.println("  Database query failed: " + e.getMessage());

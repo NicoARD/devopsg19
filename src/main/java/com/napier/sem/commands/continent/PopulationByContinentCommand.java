@@ -1,6 +1,7 @@
 package com.napier.sem.commands.continent;
 
 import com.napier.sem.CommandBase;
+import com.napier.sem.utils.TableFormatter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,11 +47,13 @@ public class PopulationByContinentCommand extends CommandBase {
             try (ResultSet rs = stmt.executeQuery()) {
                 boolean dataFound = false;
                 
+                String headerFormat = "%-20s %15s %15s %15s %12s %12s%n";
+                
                 System.out.println("\n Population Details by Continent");
-                System.out.println("====================================================================================================================");
-                System.out.printf("%-20s %15s %15s %15s %12s %12s%n", 
+                System.out.println(TableFormatter.generateSeparator(headerFormat));
+                System.out.printf(headerFormat, 
                     "Continent", "Total Pop.", "Urban Pop.", "Rural Pop.", "Urban %", "Rural %");
-                System.out.println("--------------------------------------------------------------------------------------------------------------------");
+                System.out.println(TableFormatter.generateDashedSeparator(headerFormat));
 
                 while (rs.next()) {
                     dataFound = true;
@@ -78,7 +81,7 @@ public class PopulationByContinentCommand extends CommandBase {
                     System.out.println("  No population data found.");
                 }
                 
-                System.out.println("====================================================================================================================\n");
+                System.out.println(TableFormatter.generateSeparator(headerFormat) + "\n");
             }
         } catch (SQLException e) {
             System.out.println("  Database query failed: " + e.getMessage());
