@@ -43,7 +43,7 @@ class TopCountriesByRegionCommandTest {
 
     @Test
     void testConstructor() {
-        assertEquals("top-countries-region", command.getCommandName());
+        assertEquals("top-countries-region", command.getExcecutionCommand());
         assertTrue(command.getDescription().contains("top N countries"));
     }
 

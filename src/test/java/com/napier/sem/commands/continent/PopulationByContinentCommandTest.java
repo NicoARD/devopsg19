@@ -43,7 +43,7 @@ class PopulationByContinentCommandTest {
 
     @Test
     void testConstructor() {
-        assertEquals("population-continent", command.getCommandName());
+        assertEquals("population-continent", command.getExcecutionCommand());
         assertTrue(command.getDescription().contains("population details"));
     }
 

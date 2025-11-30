@@ -43,7 +43,7 @@ class TotalWorldPopulationCommandTest {
 
     @Test
     void testConstructor() {
-        assertEquals("population-world", command.getCommandName());
+        assertEquals("population-world", command.getExcecutionCommand());
         assertTrue(command.getDescription().contains("total population"));
     }
 

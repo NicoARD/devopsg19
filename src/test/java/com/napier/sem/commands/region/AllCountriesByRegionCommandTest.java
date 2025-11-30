@@ -43,8 +43,8 @@ class AllCountriesByRegionCommandTest {
 
     @Test
     void testConstructor() {
-        assertEquals("all-countries-region", command.getCommandName());
-        assertTrue(command.getDescription().contains("region"));
+        assertEquals("all-countries-region", command.getExcecutionCommand());
+        assertTrue(command.getDescription().contains("all countries"));
     }
 
     @Test
