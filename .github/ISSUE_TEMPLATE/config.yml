@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security issue
+    url: https://github.com/NicoARD/devopsg19/security/policy
+    about: Please do not disclose security vulnerabilities publicly. Follow our security policy.
+  - name: Questions & help (Discussions)
+    url: https://github.com/NicoARD/devopsg19/discussions/new?category=q-a
+    about: Ask usage questions in Discussions for faster community help.
