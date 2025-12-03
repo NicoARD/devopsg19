@@ -1,6 +1,6 @@
 # DevOps Group 19 Project
 
-[![Release](https://img.shields.io/github/v/release/NicoARD/devopsg19?include_prereleases)](https://github.com/NicoARD/devopsg19/releases)  [![LICENSE](https://img.shields.io/github/license/NicoARD/devopsg19.svg)](https://github.com/NicoARD/devopsg19/blob/master/LICENSE)  [![Code Coverage](https://coveralls.io/repos/github/NicoARD/devopsg19/badge.svg?branch=master)](https://coveralls.io/github/NicoARD/devopsg19)  
+[![Release](https://img.shields.io/github/v/release/NicoARD/devopsg19?include_prereleases)](https://github.com/NicoARD/devopsg19/releases)  [![LICENSE](https://img.shields.io/github/license/NicoARD/devopsg19.svg)](https://github.com/NicoARD/devopsg19/blob/master/LICENSE)  [![Coverage Status](https://coveralls.io/repos/github/NicoARD/devopsg19/badge.svg?branch=master)](https://coveralls.io/github/NicoARD/devopsg19?branch=master)
 
 **Master Branch:** [![Build Status](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/NicoARD/devopsg19/actions/workflows/main.yml)  
 
